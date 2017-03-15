@@ -32,7 +32,7 @@ def Make_db_pet():
 def Make_db_house():
     con = sqlite3.connect("house.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS house(Host text NOT NULL, H_key text NOT NULL, State text NOT NULL, City text NOT NULL, Street text NOT NULL, Apt text NOT NULL, Address text NOT NULL, Citycode text DEFAULT 0 ,Type text DEFAULT 0, Room text DEFAULT 0, Area text DEFAULT 0, Elevator text, Parking text, PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS house(Host text NOT NULL, H_key text NOT NULL, State text NOT NULL, City text NOT NULL, Street text NOT NULL, Apt text NOT NULL, Address text NOT NULL, Citycode text DEFAULT 0 ,Type text DEFAULT 0, Room text DEFAULT 0, Elevator text, Parking text, PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
