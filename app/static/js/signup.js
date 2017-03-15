@@ -20,6 +20,7 @@ function onClicked_Plus(elem) {
 }
 
 function onClicked_Minus(elem) {
+  console.log(elem);
   var value = parseInt(document.getElementById('input_number_of_room').value, 10);
   value = isNaN(value) ? 0 : value;
   if(value > 0) {
@@ -27,5 +28,11 @@ function onClicked_Minus(elem) {
     document.getElementById('input_number_of_room').value = value;
     document.getElementById("span_number_of_room").innerHTML="방 " + value + '개';
   }
+}
+
+function onClicked_profile(elem) {
+  console.log(elem);
+  elem.setAttribute("aria-selected",true)
 
 }
+// object.setAttribute("aria-selected",value);var value = object.getAttribute("aria-selected");
