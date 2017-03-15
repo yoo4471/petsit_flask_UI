@@ -330,6 +330,8 @@ def rooms():
 	check_room = function.Check_citycode(User)
 	if(check_room):
 		room = function.Read_house(User)
+	else:
+		room = ''
 
 	return render_template("user_rooms.html",
                         title='MyProfile/rooms',
