@@ -13,15 +13,35 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 @app.route('/index')
 def index():
 	if 'email' in session:
+
 		return render_template("search.html",
                         title='Welcome',
-						session=session['email'])
-	if 'email' in session:
-		return 'Logged in as %s' % escape(session['email'])
-	else:
-		return render_template("search.html",
+						session=session['email']
+						)
+
+	return render_template("search.html",
                         title='Welcome',
 						session=None)
+
+@app.route('/search_results', methods=['GET', 'POST'])
+def results():
+
+	if request.method == 'POST':
+	    Email= request.form.get("email")
+	    PW = request.form.get("password")
+	    result1 = function.Check_email(Email)
+	    result2 = function.Check_pw(Email, PW)
+	    if result1 ==[]:
+	        error = 'Invalid username'
+	    elif result2 ==[]:
+	        error = 'Invalid password'
+	    else:
+	        session['email'] = Email
+	        return redirect('/')
+
+	    return render_template("search_results.html",
+	                        title='results'
+	                        )
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -114,14 +134,17 @@ def enrollment_home_address():
         street = request.form.get("street")
         apt = request.form.get("apt")
         zipcode = request.form.get("zipcode")
-        # function.Save_home_address(User, state, city, street, apt, zipcode)
+        function.Save_home_address(User, state, city, street, apt, zipcode)
         citycode = zipcode[0:3]
         function.Update_Citycode(User, citycode)
         return redirect('/enrollment_home/room')
 
+	# if citycode[0][0] != '0':
+        # city =
     return render_template("address.html",
                         title='progress',
-						session='OK')
+						session='OK',
+						city='')
 
 
 @app.route('/enrollment_home/room', methods=['GET', 'POST'])
@@ -166,7 +189,7 @@ def enrollment_home_car_elevator():
 		elevator = house_type = request.form.get("elevatorType")
 		parking = house_type = request.form.get("parkingType")
 		function.Save_home_car_elevator(User, elevator, parking)
-		return redirect('/enrollment_home/complete')
+		return redirect('/rooms')
 
 
 	return render_template("car_elevator.html",
@@ -219,7 +242,8 @@ def enrollment_pet_pet():
 		day = request.form.get("pet[birthday_day]")
 		year = request.form.get("pet[birthday_year]")
 
-		# function.Save_pet(User, petname, petgender, month, day, year, year)
+		petbirth = year+"-"+month+"-"+day
+		function.Save_pet_pet(User, petname, petgender,petbirth)
 
 		return redirect('/enrollment_pet/size')
 
@@ -245,6 +269,7 @@ def enrollment_pet_size():
 
 		breed = request.form.get("breed")
 		size = request.form.get("size")
+		function.Save_pet_size(User, breed, size)
 
 		return redirect('/enrollment_pet/vac')
 
@@ -263,11 +288,13 @@ def enrollment_pet_vac():
 
 		# ImmutableMultiDict([('ns', '1'),
 		# 					('vac', '2')])
-
+		User = session['email']
 		ns = request.form.get("ns")
 		vac = request.form.get("vac")
+		function.Save_pet_vac(User, ns, vac)
+		function.Increase_npet(User)
 
-		return redirect('/enrollment_pet/complete')
+		return redirect('/pets')
 
 	return render_template("pet_vac.html",
                         title='pet',
@@ -299,9 +326,14 @@ def rooms():
 	if request.method == 'POST':
 		print(request.form)
 
+	User = session['email']
+	check_room = function.Check_citycode(User)
+	if(check_room):
+		room = function.Read_house(User)
+
 	return render_template("user_rooms.html",
                         title='MyProfile/rooms',
-						session='OK')
+						session='OK', rooms = room)
 
 @app.route('/pets', methods=['GET', 'POST'])
 def pets():
@@ -312,9 +344,22 @@ def pets():
 	if request.method == 'POST':
 		print(request.form)
 
+	User = session['email']
+	check_pet = function.Check_npet(User)
+	if check_pet[0][0]=='1':
+		pet = function.Read_pet(User)
+		# if pet[0][6] == '1':
+		# 	pet[0][6] == "Small"
+		# elif pet[0][6] == '2':
+		# 	pet[0][6] == "Medium"
+		# else:
+		# 	pet[0][6] == "Large"
+	else:
+		pet = ''
+
 	return render_template("user_pets.html",
                         title='MyProfile/pets',
-						session='OK')
+						session='OK', pets=pet)
 
 @app.route('/users/edit', methods=['GET', 'POST'])
 def users_edit():
@@ -325,6 +370,7 @@ def users_edit():
 	if request.method == 'POST':
 		print(request.form)
 
+
 	return render_template("user_edit.html",
                         title='MyProfile/edit',
 						session='OK')
@@ -333,18 +379,30 @@ def users_edit():
 @app.route('/test', methods=['GET', 'POST'])
 def test():
 
+
 	if not 'email' in session:
 		return redirect('/')
 
-	# if request.method == 'GET':
-		# print(request.form)
-	data = function.Read_member()
-	print(data)
+	if request.method == 'POST':
+		print(request.form)
 
-	# if request.args['type'] == 'json':
-		# return jsonify(rooms = 'data')
-	# else:
+	User = session['email']
+	info = function.Read_member(User)
+	# http://snacky.tistory.com/6
+
 	return render_template("test_get_rooms.html",
-                        title='progress',
-						session='OK',
-						rooms = data)
+                        title='MyProfile/rooms',
+						session='OK', rooms = info)
+
+	# if not 'email' in session:
+	# 	return redirect('/')
+	#
+	# # if request.method == 'GET':
+	# 	# print(request.form)
+	# data = function.Read_member()
+	# print(data)
+
+	# return render_template("test_get_rooms.html",
+    #                     title='progress',
+	# 					session='OK',
+	# 					rooms = data)

@@ -14,13 +14,13 @@ def Make_db():
     con.close()
 
 #pet.db 만드는 함수
-#Host, P_key, Name, Birth, Gender, Kind, NS, Vac
+#Host, P_key, Name, Birth, Gender, Kind, Size,  NS, Vac
 #HosT: member.db 의 Email
 #P_key: 이메일#Pet
 def Make_db_pet():
     con = sqlite3.connect("pet.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS pet(Host text NOT NULL,P_key text, Name text, Birth text, Gender text, Kind text,NS text, Vac text, PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS pet(Host text NOT NULL,P_key text, Name text, Birth text, Gender text, Kind text, Size text, NS text, Vac text, PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -71,6 +71,15 @@ def Check_citycode(E):
     con.close()
     return data
 
+def Check_npet(E):
+    con = sqlite3.connect("member.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT PN FROM member WHERE Email=?",(E, ))
+    data = cursor.fetchall()
+    con.commit()
+    con.close()
+    return data
+
 #Email : E, Password: P로 회원가입 할 경우 디비에 이를 저장
 def Save_mem(E, P):
     con = sqlite3.connect("member.db")
@@ -116,26 +125,41 @@ def Save_home_room(E, H_Type, H_Room):
     con = sqlite3.connect("house.db")
     cursor = con.cursor()
     cursor.execute("UPDATE house set Type = ?, Room = ? WHERE Host = ?", (H_Type, H_Room, E))
-
+    con.commit()
+    con.close()
 #house 등록할 경우 db에 집 정보 저장하는 함수
 #Elevator, Parking
 def Save_home_car_elevator(E, H_Elevator, H_Parking):
     con = sqlite3.connect("house.db")
     cursor = con.cursor()
     cursor.execute("UPDATE house set Elevator = ?, Parking= ? WHERE Host = ?", (H_Elevator, H_Parking, E))
-
+    con.commit()
+    con.close()
 #pet 등록할 경우 db에 펫 정보 저장하는 함수
-#Host, P_key, Name, Birth, Gender, Kind, NS, Vac
+#Host, P_key, Name, Birth, Gender, Kind, size, NS, Vac
 #P_size : S= 소형견, M= 중형견, L=대형경
 #NS, Vac : Y, N
-def Save_pet(E, P_Name, P_Birth, P_Gender, P_Kind, P_NS, P_Vac):
+def Save_pet_pet(E, P_Name, P_Gender, P_Birth):
     con = sqlite3.connect("pet.db")
     cursor = con.cursor()
     key = E + "#Pet"
-    cursor.execute("INSERT INTO pet (Host, P_key, Name, Birth, Gender, Kind, NS, Vac) VALUES (?,?,?,?,?,?,?,?)", (E, key, P_Name, P_Birth, P_Gender, P_Kind, P_NS, P_Vac))
+    cursor.execute("INSERT INTO pet (Host, P_key, Name, Birth, Gender) VALUES (?,?,?,?,?)", (E, key, P_Name, P_Birth, P_Gender))
     con.commit()
     con.close()
 
+def Save_pet_size(E, P_Kind,P_size):
+    con = sqlite3.connect("pet.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE pet set Kind = ?, Size= ? WHERE Host = ?", (P_Kind,P_size, E))
+    con.commit()
+    con.close()
+
+def Save_pet_vac(E, P_NS, P_Vac):
+    con = sqlite3.connect("pet.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE pet set NS = ?, Vac= ? WHERE Host = ?", (P_NS, P_Vac, E))
+    con.commit()
+    con.close()
 
 #Host, H_key, Address, Type, Room, Area, Elevator, Parking
 def Save_House(E,H_Address, H_Type, H_Room, H_Area, H_Elevator, H_Parking):
@@ -155,30 +179,30 @@ def Update_F_pesitter(E):
     con.close()
 
 #member.db 전체 읽는 함수 - 테스트용
-def Read_member():
+def Read_member(E):
     con = sqlite3.connect("member.db")
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM member")
+    cursor.execute("SELECT * FROM member WHERE Email = ?", (E, ))
     data = cursor.fetchall()
     con.commit()
     con.close()
     return data
 
 #pet.db 전체 읽는 함수 - 테스트용
-def Read_pet():
+def Read_pet(E):
     con = sqlite3.connect("pet.db")
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM pet")
+    cursor.execute("SELECT * FROM pet WHERE Host = ?", (E, ))
     data = cursor.fetchall()
     con.commit()
     con.close()
     return data
 
 #pet.db 전체 읽는 함수 - 테스트용
-def Read_house():
+def Read_house(E):
     con = sqlite3.connect("house.db")
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM house")
+    cursor.execute("SELECT * FROM house WHERE Host = ?", (E, ))
     data = cursor.fetchall()
     con.commit()
     con.close()

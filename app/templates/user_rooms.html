@@ -24,6 +24,7 @@
             </ul>
 
         </div>
+        {% if rooms %}
         <div class="col-md-9">
             <div class="your-listings-flash-container"></div>
             <div id="listings-container">
@@ -51,13 +52,57 @@
                                                             <div class="progress-bar progress-bar-success progress-bar__babu" style="width: 100%;"></div>
                                                         </div>
                                                         <div class="text-babu space-top-1"><span>숙소 등록이 100% 완료되었습니다.</span></div>
+
+
+
                                                         <div class="space-top-2"></div>
                                                     </div>
                                                 </div>
-                                            </div><span class="h4"><a href="/manage-listing/17629582" class="text-normal"><span><!-- react-text: 27 -->개인실(위치: Dongjak-gu)<!-- /react-text --></span></a>
+                                            </div><span class="h4"><a href="/manage-listing/17629582" class="text-normal"><span><!-- react-text: 27 -->
+                                              <!-- 개인실(위치: Dongjak-gu) -->
+                                              <!-- /react-text -->
+
+                                            <!-- 위치: -->
+                                              <!-- <br> -->
+                                              <!-- {{ rooms[0][7] }}<br> -->
+
+                                            {% if rooms[0][8]=='A' %}
+                                            아파트(위치: {{ rooms[0][6] }})<br>
+                                            {% else %}
+                                            단독주택(위치: {{ rooms[0][6] }})<br>
+                                            {% endif %}
+                                            방개수
+                                              {{ rooms[0][9] }}개<br>
+
+                                              <!-- {{ rooms[0][10] }} 평<br> -->
+                                            엘레베이터
+                                            {% if rooms[0][11] == 'yes' %}
+                                        			있음
+                                        		{% elif rooms[0][11] == 'no' %}
+                                        			없음
+                                            {% endif %}<br>
+                                            주차
+                                            {% if rooms[0][12] == 'yes' %}
+                                        			가능
+                                        		{% elif rooms[0][12] == 'no' %}
+                                        			불가능
+                                            {% endif %}<br>
+
+
+
+
+                                            </span></a>
                                             </span>
                                             <div class="text-muted text-grey space-top-1 last-modified-date"><span>최종 업데이트: 2017년 3월 9일</span></div>
-                                            <div class="space-top-4"><a class="btn btn__first-btn btn-primary" href="/enrollment_home/address"><span>등록 완료하기</span></a><a class="btn btn__second-btn" href="/enrollment_home/address"><span>수정하기</span></a></div><noscript></noscript></div>
+
+
+
+
+
+
+                                            <div class="space-top-4">
+                                              <a class="btn btn__first-btn btn-primary" href="/enrollment_home/address"><span>등록 수정하기</span></a>
+                                              <a class="btn btn__second-btn" href="#"><span>삭제하기</span></a></div><noscript></noscript></div>
                                     </div>
                                 </li>
                             </ul>
@@ -69,6 +114,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 
 
