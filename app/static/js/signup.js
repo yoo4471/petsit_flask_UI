@@ -20,7 +20,7 @@ function onClicked_Plus(elem) {
 }
 
 function onClicked_Minus(elem) {
-  console.log(elem);
+  alert("Hello! I am an alert box!!");
   var value = parseInt(document.getElementById('input_number_of_room').value, 10);
   value = isNaN(value) ? 0 : value;
   if(value > 0) {
