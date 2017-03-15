@@ -3021,7 +3021,18 @@ input[type="checkbox"]:checked:before {
 	content:'\f105'
 }
 .icon-airbnb-alt:before {
-	content:'\f106'
+	/*content:'\f106'*/
+	content: " ";
+  background-image: url('/static/img/logo.svg');
+  background-size: cover;
+  position: relative;
+  display: inline-block;
+	top: 3px;
+  width: 30px;
+  height: 30px;
+
+
+	/*content: url( "/static/img/logo.svg" );*/
 }
 .icon-airbnb:before {
 	content:'\f107'
