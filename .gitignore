@@ -1,0 +1,6 @@
+.DS_Store
+*/.DS_Store
+*/*/.DS_Store
+house.db
+member.db
+pet.db
