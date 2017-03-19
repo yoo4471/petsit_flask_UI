@@ -9,7 +9,7 @@ import sqlite3
 def Make_db():
     con = sqlite3.connect("member.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS member(Email text NOT NULL UNIQUE, PW text NOT NULL,PN text DEFAULT 0, CC text DEFAULT 0, AP text DEFAULT 0)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS member(Email text NOT NULL UNIQUE, PW text NOT NULL,PN text DEFAULT 0, CC text DEFAULT 0, AP text DEFAULT 0, Time DATE DEFAULT (datetime('now','localtime')))")
     con.commit()
     con.close()
 
@@ -20,7 +20,7 @@ def Make_db():
 def Make_db_pet():
     con = sqlite3.connect("pet.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS pet(Host text NOT NULL,P_key text, Name text, Birth text, Gender text, Kind text, Size text, NS text, Vac text, PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS pet(Host text NOT NULL,P_key text, Name text, Birth text, Gender text, Kind text, Size text, NS text, Vac text,  Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -32,7 +32,7 @@ def Make_db_pet():
 def Make_db_house():
     con = sqlite3.connect("house.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS house(Host text NOT NULL, H_key text NOT NULL, State text NOT NULL, City text NOT NULL, Street text NOT NULL, Apt text NOT NULL, Address text NOT NULL, Citycode text DEFAULT 0 ,Type text DEFAULT 0, Room text DEFAULT 0, Elevator text, Parking text, PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS house(Host text NOT NULL, H_key text NOT NULL, State text NOT NULL, City text NOT NULL, Street text NOT NULL, Apt text NOT NULL, Address text NOT NULL, Citycode text DEFAULT 0 ,Type text DEFAULT 0, Room text DEFAULT 0, Elevator text, Parking text,  Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_PerPet FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -135,6 +135,35 @@ def Save_home_car_elevator(E, H_Elevator, H_Parking):
     cursor.execute("UPDATE house set Elevator = ?, Parking= ? WHERE Host = ?", (H_Elevator, H_Parking, E))
     con.commit()
     con.close()
+
+def Modify_home_address(E, H_State, H_City, H_Street, H_Apt,H_Zipcode):
+    con = sqlite3.connect("house.db")
+    cursor = con.cursor()
+    H_Address = H_State + " "+ H_City + " " + H_Street + " " + H_Apt
+    cursor.execute("UPDATE house SET State = ? WHERE Host = ? AND State <> ? ", (H_State,E, H_State))
+    cursor.execute("UPDATE house SET City = ? WHERE Host = ? AND City <> ? ", (H_City,E, H_City))
+    cursor.execute("UPDATE house SET Street = ? WHERE Host = ? AND Street <> ? ", (H_Street,E,H_Street))
+    cursor.execute("UPDATE house SET Apt = ? WHERE Host = ? AND Apt <> ? ", (H_Apt,E, H_Apt))
+    cursor.execute("UPDATE house SET Address = ? WHERE Host = ? AND Address <> ? ", (H_Address,E, H_Address))
+    cursor.execute("UPDATE house SET Citycode = ? WHERE Host = ? AND Citycode <> ? ", (H_Zipcode,E, H_Zipcode))
+    con.commit()
+    con.close()
+
+def Modify_home_room(E, H_Type, H_Room):
+    con = sqlite3.connect("house.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE house SET Type = ? WHERE Host = ? AND Type <> ? ", (H_Type,E, H_Type))
+    cursor.execute("UPDATE house SET Room = ? WHERE Host = ? AND Room <> ? ", (H_Room,E, H_Room))
+    con.commit()
+    con.close()
+
+def Modify_home_car_elevator(E, H_Elevator, H_Parking):
+    con = sqlite3.connect("house.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE house SET Elevator = ? WHERE Host = ? AND Elevator <> ? ", (H_Elevator,E, H_Elevator))
+    cursor.execute("UPDATE house SET Parking = ? WHERE Host = ? AND Parking <> ? ", (H_Parking,E, H_Parking))
+    con.commit()
+    con.close()
 #pet 등록할 경우 db에 펫 정보 저장하는 함수
 #Host, P_key, Name, Birth, Gender, Kind, size, NS, Vac
 #P_size : S= 소형견, M= 중형견, L=대형경
@@ -158,6 +187,31 @@ def Save_pet_vac(E, P_NS, P_Vac):
     con = sqlite3.connect("pet.db")
     cursor = con.cursor()
     cursor.execute("UPDATE pet set NS = ?, Vac= ? WHERE Host = ?", (P_NS, P_Vac, E))
+    con.commit()
+    con.close()
+    
+def Modify_pet_pet(E, P_Name, P_Gender, P_Birth):
+    con = sqlite3.connect("pet.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE pet SET Name = ? WHERE Host = ? AND Name <> ? ", (P_Name,E, P_Name))
+    cursor.execute("UPDATE pet SET Gender = ? WHERE Host = ? AND Gender <> ? ", (P_Gender,E, P_Gender))
+    cursor.execute("UPDATE pet SET Birth = ? WHERE Host = ? AND Birth <> ? ", (P_Birth,E, P_Birth))
+    con.commit()
+    con.close()
+
+def Modify_pet_size(E, P_Kind,P_Size):
+    con = sqlite3.connect("pet.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE pet SET Kind = ? WHERE Host = ? AND Kind <> ? ", (P_Kind,E, P_Kind))
+    cursor.execute("UPDATE pet SET Size = ? WHERE Host = ? AND Size <> ? ", (P_Size,E, P_Size))
+    con.commit()
+    con.close()
+
+def Modify_pet_vac(E, P_NS, P_Vac):
+    con = sqlite3.connect("pet.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE pet SET NS = ? WHERE Host = ? AND NS <> ? ", (P_NS,E, P_NS))
+    cursor.execute("UPDATE pet SET Vac = ? WHERE Host = ? AND Vac <> ? ", (P_Vac,E, P_Vac))
     con.commit()
     con.close()
 
@@ -209,25 +263,25 @@ def Read_house(E):
     return data
 
 #db 전체 지우는 함수 - 테스트용
-def Delete_member():
+def Delete_member(E):
     con = sqlite3.connect("member.db")
     cursor = con.cursor()
-    cursor.execute("DROP TABLE member")
+    cursor.execute("SELECT * FROM member WHERE Email=?", (E, ))
     con.commit()
     con.close()
 
 #db 전체 지우는 함수 - 테스트용
-def Delete_pet():
+def Delete_pet(E):
     con = sqlite3.connect("pet.db")
     cursor = con.cursor()
-    cursor.execute("DROP TABLE pet")
+    cursor.execute("SELECT * FROM pet WHERE Email=?", (E, ))
     con.commit()
     con.close()
 
 #db 전체 지우는 함수 - 테스트용
-def Delete_house():
+def Delete_house(E):
     con = sqlite3.connect("house.db")
     cursor = con.cursor()
-    cursor.execute("DROP TABLE house")
+    cursor.execute("SELECT * FROM house WHERE Email=?", (E, ))
     con.commit()
     con.close()

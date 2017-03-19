@@ -184,7 +184,7 @@ def enrollment_home_car_elevator():
 		User = session['email']
 		print(request.form)
 		# ImmutableMultiDict([('elevatorType', 'yes'),
-		# 					('parkingType', 'no')])
+		# 					('parkingType', 'neo')])
 		print(User)
 		elevator = house_type = request.form.get("elevatorType")
 		parking = house_type = request.form.get("parkingType")
