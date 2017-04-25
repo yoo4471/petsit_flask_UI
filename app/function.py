@@ -406,7 +406,7 @@ def Search_bytotal(num):
     cursor.execute("SELECT Host, Cost, Total FROM petsitter WHERE Total = ?", (num, ))
     data = cursor.fetchall()
     cursor2 = con.cursor()
-    cursor2.execute("SELECT Address, Type FROM house WHERE Host = ?", (data[0][0], ))
+    cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (data[0][0], ))
     data2 = cursor2.fetchall()
     result = data[0] + data2[0]
     con.commit()
