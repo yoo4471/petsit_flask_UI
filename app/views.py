@@ -1,12 +1,15 @@
 #-*- coding: utf-8 -*-
-from flask import render_template, flash, redirect, request, Response
+from flask import render_template, flash, redirect, request, Response,send_file
 from flask import Flask, session, url_for, escape
 from app import app
 import json
 from . import function
+import os
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 # app.secret_key = os.urandom(24)
+
+UPLOAD_FOLDER = os.getcwd()
 
 # index view function suppressed for brevity
 @app.route('/')
@@ -377,9 +380,26 @@ def users_edit():
                         title='MyProfile/edit',
 						session='OK')
 
+# https://www.slideshare.net/arload/flask-restful-api
+@app.route('/upload', methods=['POST', 'GET'])
+def upload():
+    if request.method == 'POST':
+        imgName = request.form['imgName']
+        file = request.files['uploadedfile']
+        path = UPLOAD_FOLDER + file.filename;
+        if file and allowed_file(file.filename):
+            file.save(path)
+            return "ok";
+    return "error";
+
+@app.route('/image/<fileName>', methods=['POST', 'GET'])
+def loadImage(fileName):
+    return send_file(UPLOAD_FOLDER+"/"+fileName, mimetype='image');
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
+	User = session['email']
+	function.Save_image(User, 'houst', '/home/soyoung/team/real/petsit_flask_UI/sky')
 
 
 	if not 'email' in session:
@@ -391,7 +411,7 @@ def test():
 	User = session['email']
 	info = function.Read_member(User)
 	# http://snacky.tistory.com/6
-
+	#
 	return render_template("test_get_rooms.html",
                         title='MyProfile/rooms',
 						session='OK', rooms = info)
