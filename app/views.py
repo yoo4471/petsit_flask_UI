@@ -12,10 +12,21 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 @app.route('/')
 @app.route('/index')
 def index():
-	if 'email' in session:
 
+	if 'email' in session:
+		if request.method == 'POST':
+			return render_template("search_results.html",
+							title='Welcome',
+							session=session['email']
+							)
 		return render_template("search.html",
-                        title='Welcome',
+						title='Welcome',
+						session=session['email']
+						)
+
+	if request.method == 'POST':
+		return render_template("search_results.html",
+						title='Welcome',
 						session=session['email']
 						)
 
@@ -23,25 +34,45 @@ def index():
                         title='Welcome',
 						session=None)
 
-@app.route('/search_results', methods=['GET', 'POST'])
+
+@app.route('/s', methods=['GET', 'POST'])
 def results():
 
-	if request.method == 'POST':
-	    Email= request.form.get("email")
-	    PW = request.form.get("password")
-	    result1 = function.Check_email(Email)
-	    result2 = function.Check_pw(Email, PW)
-	    if result1 ==[]:
-	        error = 'Invalid username'
-	    elif result2 ==[]:
-	        error = 'Invalid password'
-	    else:
-	        session['email'] = Email
-	        return redirect('/')
+		# request.query_string  전체 get parameter 받아오는 명령어
 
-	    return render_template("search_results.html",
-	                        title='results'
-	                        )
+
+
+		# checkin = request.args['checkin']
+		# checkout = request.args['checkout']
+
+		adults = request.args['adults'] #소형견
+		children = request.args['children'] #중형견
+		infants = request.args['infants'] #대형견
+		guests = int(adults) + int(children) + int(infants)
+		print("number of guests = ", guests)
+		print("number of adults = ", adults)
+		print("number of children = ", children)
+		# print("checkin  = ", checkin)
+		# print("checkout = ", checkout)
+		print("=====================================================\n", request.query_string, "=====================================================\n")
+
+		# 보낼 때 function(guests, adults, children,infants, checkin, checkout)
+		Info = makeinfo()
+		print(Info)
+
+		if 'email' in session:
+
+
+
+			return render_template("search_results.html",
+		                        title='results',
+								session=session['email'],
+		                        info = Info)
+
+		return render_template("search_results.html",
+	   						title='results',
+							session=None,
+	                        info = Info)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -382,19 +413,45 @@ def users_edit():
 def test():
 
 
-	if not 'email' in session:
-		return redirect('/')
+	if 'email' in session:
+
+		return render_template("test_search.html",
+                        title='Welcome',
+						session=session['email']
+						)
 
 	if request.method == 'POST':
 		print(request.form)
 
-	User = session['email']
-	info = function.Read_member(User)
+	# User = session['email']
+	# info = function.Read_member(User)
+
+
+	return render_template("test_search.html",
+                        title='Search',
+						session='OK',
+						info = info)
+@app.route('/test2', methods=['GET', 'POST'])
+def test2():
+
+
+	if 'email' in session:
+
+		return render_template("test_search2.html",
+                        title='Welcome',
+						session=session['email']
+						)
+
+	if request.method == 'POST':
+		print(request.form)
+
+	# User = session['email']
+	# info = function.Read_member(User)
 	# http://snacky.tistory.com/6
 
-	return render_template("test_get_rooms.html",
-                        title='MyProfile/rooms',
-						session='OK', rooms = info)
+	return render_template("test_search2.html",
+                        title='Search',
+						session='OK')
 
 	# if not 'email' in session:
 	# 	return redirect('/')
@@ -408,3 +465,8 @@ def test():
     #                     title='progress',
 	# 					session='OK',
 	# 					rooms = data)
+def makeinfo():
+
+	info = [[0]*5 for i in range(8)]
+
+	return info
