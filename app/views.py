@@ -56,8 +56,8 @@ def results():
 		# print("checkout = ", checkout)
 		print("=====================================================\n", request.query_string, "=====================================================\n")
 
-		# 보낼 때 function(guests, adults, children,infants, checkin, checkout)
-		Info = makeinfo()
+		Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
+
 		print(Info)
 
 		if 'email' in session:
