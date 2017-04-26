@@ -405,12 +405,22 @@ def Search_bytotal(T, L, M, S, S_date, E_date):
     cursor = con.cursor()
     cursor.execute("SELECT Host, Cost, Total FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
     data = cursor.fetchall()
+    cursor.execute("SELECT COUNT(Host) FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
+    cnt = cursor.fetchone()
     if data ==[]:
         return 0
     cursor2 = con.cursor()
-    cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (data[0][0], ))
-    data2 = cursor2.fetchall()
-    result = data[0] + data2[0]
+    i=0
+    result2 = []
+    while i<cnt[0]:
+        a = data[i][0]
+        cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (a, ))
+        data2 = cursor2.fetchall()
+        if data2 ==[]:
+            return 0
+        result = data[i] + data2[0]
+        result2 .append(result)
+        i=i+1
     con.commit()
     con.close()
-    return result[0]
+    return result2

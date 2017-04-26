@@ -4,6 +4,7 @@ from flask import Flask, session, url_for, escape
 from app import app
 import json
 from . import function
+import os
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 # app.secret_key = os.urandom(24)
@@ -40,29 +41,30 @@ def results():
 
 		# request.query_string  전체 get parameter 받아오는 명령어
 
+		checkin = request.args['checkin']
+		checkout = request.args['checkout']
 
-
-		# checkin = request.args['checkin']
-		# checkout = request.args['checkout']
-
-		adults = request.args['adults'] #소형견
-		children = request.args['children'] #중형견
-		infants = request.args['infants'] #대형견
-		guests = int(adults) + int(children) + int(infants)
+		S = request.args['adults'] #소형견
+		M = request.args['children'] #중형견
+		L = request.args['infants'] #대형견
+		guests = int(S) + int(M) + int(L)
+		adults = int(S)
+		children = int(M)
+		infants = int(L)
 		print("number of guests = ", guests)
 		print("number of adults = ", adults)
 		print("number of children = ", children)
-		# print("checkin  = ", checkin)
-		# print("checkout = ", checkout)
+		print("checkin  = ", checkin)
+		print("checkout = ", checkout)
 		print("=====================================================\n", request.query_string, "=====================================================\n")
 
 		Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
+		Info2 = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
 
-		print(Info)
+		print("Info: ", Info)
+		print("Info: ", Info2)
 
 		if 'email' in session:
-
-
 
 			return render_template("search_results.html",
 		                        title='results',
@@ -465,8 +467,43 @@ def test2():
     #                     title='progress',
 	# 					session='OK',
 	# 					rooms = data)
-def makeinfo():
 
-	info = [[0]*5 for i in range(8)]
+def remove_DBfiles():
+    filenames = ['house.db', 'member.db', 'pet.db', 'petsitting.db']
 
-	return info
+    #print(Path().parent)
+
+    for filename in filenames:
+        try:
+
+            path = os.getcwd() + "/" + filename
+            print(path)
+            os.remove(path)
+        except OSError:
+            pass
+
+def loop_insert():
+    for i in range(1, 101):
+        user = str(i) + "@gmail.com"
+        passwd = '1234'
+        function.Save_mem(user, passwd)
+
+        function.Save_home_address(user, str(i), 'city', 'street', 'apt', 'zipcode' )
+        function.Update_Citycode(user, 'citycode')
+        function.Save_home_room(user, 'house_type', 'room')
+        function.Save_home_car_elevator(user, 'elevator', 'parking')
+
+
+        function.Save_pet_pet(user, str(i), 'petgender', 'petbirth')
+        function.Save_pet_size(user, 'bread', 'size')
+        function.Save_pet_vac(user, 'ns', 'vac')
+        function.Increase_npet(user)
+
+        function.Save_petsitter1(user, i, '04/22/2017' , '05/13/2017' , '05/14/2017')
+        function.Save_petsitter2(user, 10 , 6 , 6 , 6)
+
+# @app.route('/s/<name>/booking', methods=[GET,POST])
+# def booking(petsitter):
+# 	return render_template("test_search2.html",
+#                         title='Search',
+# 						session='OK')
