@@ -83,6 +83,17 @@ def results():
 							total = total,
 							page = page)
 
+@app.route('/petsitter/booking', methods=['GET', 'POST'])
+def booking():
+	if 'email' in session:
+
+		return render_template("booking.html",
+							title='results',
+							session=session['email'])
+
+	return render_template("booking.html",
+						title='results',
+						session=None)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -474,6 +485,19 @@ def test2():
     #                     title='progress',
 	# 					session='OK',
 	# 					rooms = data)
+
+@app.route('/test_booking', methods=['GET', 'POST'])
+def test_booking():
+	if 'email' in session:
+		return render_template("test_booking.html",
+                        title='Welcome',
+						session=session['email']
+						)
+
+	return render_template("test_booking.html",
+                        title='Search',
+						session='OK')
+
 
 def remove_DBfiles():
     filenames = ['petsitting.db']
