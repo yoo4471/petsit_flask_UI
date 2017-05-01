@@ -38,11 +38,11 @@ def Make_db_house():
     con.close()
 
  #petsitter.db 만드는 함수
- #Host , Cost , Start_Date , End_Date , Except_Date , Total , Large , Midium , Small
+ #Host , Cost_L, Cost_M, Cost_S , Start_Date , End_Date , Except_Date , Total , Large , Midium , Small
 def Make_db_petsitter():
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -119,11 +119,11 @@ def Check_npet(E):
     return data
 
 #petsitter.db에 펫시터 정보 삽입하는 함수
-def Save_petsitter1(Host, Cost, Start_Date , End_Date , Except_Date):
+def Save_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
     try:
-         cursor.execute("INSERT INTO petsitter (Host, Cost, Start_Date , End_Date , Except_Date ) VALUES (?, ?, ?, ?, ?)", (Host, Cost, Start_Date , End_Date , Except_Date))
+         cursor.execute("INSERT INTO petsitter (Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date ) VALUES (?, ?, ?, ? ,?, ?, ?)", (Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date))
     except:
         return 0
     con.commit()
@@ -139,10 +139,12 @@ def Save_petsitter2(Host,Total , Large , Midium , Small):
     con.close()
 
 # cursor.execute("UPDATE house SET State = ? WHERE Host = ? AND State <> ? ", (H_State,E, H_State))
-def Modify_petsitter1(Host, Cost, Start_Date , End_Date , Except_Date):
+def Modify_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("UPDATE petsitter  SET Cost =? WHERE Host =? AND Cost <> ?", (Cost, Host, Cost))
+    cursor.execute("UPDATE petsitter  SET Cost_L =? WHERE Host =? AND Cost_L <> ?", (Cost_L, Host, Cost_L))
+    cursor.execute("UPDATE petsitter  SET Cost_M =? WHERE Host =? AND Cost_M <> ?", (Cost_M, Host, Cost_M))
+    cursor.execute("UPDATE petsitter  SET Cost_S =? WHERE Host =? AND Cost_S <> ?", (Cost_S, Host, Cost_S))
     cursor.execute("UPDATE petsitter  SET Start_Date =? WHERE Host =? AND Start_Date <> ?", (Start_Date, Host, Start_Date))
     cursor.execute("UPDATE petsitter  SET  End_Date =? WHERE Host =? AND  End_Date <> ?", (End_Date, Host,  End_Date))
     cursor.execute("UPDATE petsitter  SET  Except_Date =? WHERE Host =? AND  Except_Date <> ?", ( Except_Date, Host,  Except_Date))
@@ -352,6 +354,15 @@ def Read_house(E):
     con.close()
     return data
 
+def Read_petsitter(E):
+    con = sqlite3.connect("petsitting.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM petsitter WHERE Host = ?", (E, ))
+    data = cursor.fetchall()
+    con.commit()
+    con.close()
+    return data
+
 def Get_image(E, Asset):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
@@ -399,18 +410,28 @@ def Delete_image(Host, Asset):
     con.close()
 
 #총마리수로 검색하는 경우
-#result : Host, cost, total, address, type
-def Search_bytotal(num):
+#result : Host, Cost_L, Cost_M, Cost_S, total, address, type
+def Search_bytotal(T, L, M, S, S_date, E_date):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("SELECT Host, Cost, Total FROM petsitter WHERE Total = ?", (num, ))
+    cursor.execute("SELECT Host, Cost_L, Cost_M, Cost_S, Total FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
     data = cursor.fetchall()
+    cursor.execute("SELECT COUNT(Host) FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
+    cnt = cursor.fetchone()
     if data ==[]:
         return 0
     cursor2 = con.cursor()
-    cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (data[0][0], ))
-    data2 = cursor2.fetchall()
-    result = data[0] + data2[0]
+    i=0
+    result2 = []
+    while i<cnt[0]:
+        a = data[i][0]
+        cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (a, ))
+        data2 = cursor2.fetchall()
+        if data2 ==[]:
+            return 0
+        result = data[i] + data2[0]
+        result2 .append(result)
+        i=i+1
     con.commit()
     con.close()
-    return result[0]
+    return result2
