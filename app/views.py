@@ -476,7 +476,7 @@ def test2():
 	# 					rooms = data)
 
 def remove_DBfiles():
-    filenames = ['house.db', 'member.db', 'pet.db', 'petsitting.db']
+    filenames = ['petsitting.db']
 
     #print(Path().parent)
 
@@ -495,13 +495,13 @@ def loop_insert():
         passwd = '1234'
         function.Save_mem(user, passwd)
 
-        function.Save_home_address(user, str(i), 'city', 'street', 'apt', 'zipcode' )
+        function.Save_home_address(user, str(i+1), 'city', 'street', 'apt', 'zipcode' )
         function.Update_Citycode(user, 'citycode')
         function.Save_home_room(user, 'house_type', 'room')
         function.Save_home_car_elevator(user, 'elevator', 'parking')
 
 
-        function.Save_pet_pet(user, str(i), 'petgender', 'petbirth')
+        function.Save_pet_pet(user, str(i+1), 'petgender', 'petbirth')
         function.Save_pet_size(user, 'bread', 'size')
         function.Save_pet_vac(user, 'ns', 'vac')
         function.Increase_npet(user)

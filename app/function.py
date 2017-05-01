@@ -92,7 +92,7 @@ def Check_email(E):
     return data
 
 def Check_pw(E, P):
-    con = sqlite3.connect("pesitting.db")
+    con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
     cursor.execute("SELECT Email FROM member WHERE Email=? AND PW = ?",(E, P))
     data = cursor.fetchall()
