@@ -4490,7 +4490,7 @@ table col[class^="col-"],table td[class^="col-"],table th[class^="col-"] {
 }
 .pagination ul {
 	display:inline-block;
-	margin-left:0;
+	margin-left:630px;
 	margin-bottom:0
 }
 .pagination li {

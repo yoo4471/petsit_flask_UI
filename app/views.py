@@ -59,22 +59,29 @@ def results():
 		print("=====================================================\n", request.query_string, "=====================================================\n")
 
 		Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
-		Info2 = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
 
-		print("Info: ", Info)
-		print("Info: ", Info2)
+		# print("Info: ", Info)
+
+		total = 0
+		for i in Info:
+			total = total + 1
+		page = total/8 + 1
 
 		if 'email' in session:
 
 			return render_template("search_results.html",
 		                        title='results',
 								session=session['email'],
-		                        info = Info)
+		                        info = Info,
+								total = total,
+								page = page)
 
 		return render_template("search_results.html",
 	   						title='results',
 							session=None,
-	                        info = Info)
+	                        info = Info,
+							total = total,
+							page = page)
 
 
 @app.route('/login', methods=['GET', 'POST'])
