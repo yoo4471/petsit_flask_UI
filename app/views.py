@@ -43,6 +43,7 @@ def results():
 
 	checkin = request.args['checkin']
 	checkout = request.args['checkout']
+
 	S = request.args['adults'] #소형견
 	M = request.args['children'] #중형견
 	L = request.args['infants'] #대형견
@@ -50,6 +51,7 @@ def results():
 	adults = int(S)
 	children = int(M)
 	infants = int(L)
+
 	print("number of guests = ", guests)
 	print("number of adults = ", adults)
 	print("number of children = ", children)
@@ -57,19 +59,18 @@ def results():
 	print("checkout = ", checkout)
 	print("=====================================================\n", request.query_string, "=====================================================\n")
 
-	Info = function.Search_bytotal(guests)
-
-	if Info == 0:
-		print("NULL\n")
+	Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
 
 	# print("Info: ", Info)
-
-	# total = 0
-	# for i in enumerate(Info):
-	# 	total = total + 1
-	# page = total/8 + 1
-	total = 0
-	page = 0
+	if Info == 0:
+		total = 0
+		page = 0
+		print("Info : ", Info)
+	else :
+		total = 0
+		for i in Info:
+			total = total + 1
+			page = total/8 + 1
 
 	if 'email' in session:
 
@@ -534,8 +535,8 @@ def loop_insert():
         function.Save_pet_vac(user, 'ns', 'vac')
         function.Increase_npet(user)
 
-        function.Save_petsitter1(user, i, '04/22/2017' , '05/13/2017' , '05/14/2017')
-        function.Save_petsitter2(user, 10 , 6 , 6 , 6)
+        function.Save_petsitter1(user, i+1000, i+2000, i+3000, '04/22/2017' , '05/13/2017' , '05/14/2017')
+        function.Save_petsitter2(user, 10 , 6 , 6 , 6, "intro")
 
 # @app.route('/s/<name>/booking', methods=[GET,POST])
 # def booking(petsitter):
