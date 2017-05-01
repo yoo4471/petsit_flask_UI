@@ -42,7 +42,7 @@ def Make_db_house():
 def Make_db_petsitter():
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int, Intro text, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -131,10 +131,10 @@ def Save_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except
     return 1
 # cursor.execute("UPDATE house set Type = ?, Room = ? WHERE Host = ?", (H_Type, H_Room, E))
 #petsitter.db에 펫시터 정보 삽입하는 함수
-def Save_petsitter2(Host,Total , Large , Midium , Small):
+def Save_petsitter2(Host,Total , Large , Midium , Small, Intro):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("UPDATE petsitter set Total =?, Large = ?, Midium =?, Small=? WHERE Host =?", (Total , Large , Midium , Small, Host))
+    cursor.execute("UPDATE petsitter set Total =?, Large = ?, Midium =?, Small=? , Intro=? WHERE Host =?", (Total , Large , Midium , Small, Intro, Host))
     con.commit()
     con.close()
 
@@ -151,13 +151,14 @@ def Modify_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Exce
     con.commit()
     con.close()
 
-def Modify_petsitter2(Host,Total , Large , Midium , Small):
+def Modify_petsitter2(Host,Total , Large , Midium , Small, Intro):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
     cursor.execute("UPDATE petsitter  SET Total =? WHERE Host =? AND Total <> ?", (Total, Host, Total))
     cursor.execute("UPDATE petsitter  SET Large =? WHERE Host =? AND Large <> ?", (Large, Host, Large))
     cursor.execute("UPDATE petsitter  SET Midium =? WHERE Host =? AND Midium <> ?", (Midium, Host, Midium))
     cursor.execute("UPDATE petsitter  SET Small =? WHERE Host =? AND Small <> ?", (Small, Host, Small))
+    cursor.execute("UPDATE petsitter  SET Intro =? WHERE Host =? AND Intro <> ?", (Intro, Host, Intro))
     con.commit()
     con.close()
 
