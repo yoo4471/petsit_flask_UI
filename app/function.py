@@ -42,7 +42,7 @@ def Make_db_house():
 def Make_db_petsitter():
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -92,7 +92,7 @@ def Check_email(E):
     return data
 
 def Check_pw(E, P):
-    con = sqlite3.connect("petsitting.db")
+    con = sqlite3.connect("pesitting.db")
     cursor = con.cursor()
     cursor.execute("SELECT Email FROM member WHERE Email=? AND PW = ?",(E, P))
     data = cursor.fetchall()
@@ -400,36 +400,17 @@ def Delete_image(Host, Asset):
 
 #총마리수로 검색하는 경우
 #result : Host, cost, total, address, type
-def Search_bytotal(T, L, M, S, S_date, E_date):
+def Search_bytotal(num):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("SELECT Host, Cost, Total FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
+    cursor.execute("SELECT Host, Cost, Total FROM petsitter WHERE Total = ?", (num, ))
     data = cursor.fetchall()
-    cursor.execute("SELECT COUNT(Host) FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
-    cnt = cursor.fetchone()
     if data ==[]:
         return 0
     cursor2 = con.cursor()
-    i=0
-    result2 = []
-    while i<cnt[0]:
-        a = data[i][0]
-        cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (a, ))
-        data2 = cursor2.fetchall()
-        if data2 ==[]:
-            return 0
-        result = data[i] + data2[0]
-        result2 .append(result)
-        i=i+1
+    cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (data[0][0], ))
+    data2 = cursor2.fetchall()
+    result = data[0] + data2[0]
     con.commit()
     con.close()
-    return result2
-
-def Read_petsitter(E):
-    con = sqlite3.connect("petsitting.db")
-    cursor = con.cursor()
-    cursor.execute("SELECT * FROM petsitter WHERE Host = ?", (E, ))
-    data = cursor.fetchall()
-    con.commit()
-    con.close()
-    return data
+    return result[0]

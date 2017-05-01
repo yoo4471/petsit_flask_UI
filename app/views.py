@@ -39,44 +39,48 @@ def index():
 @app.route('/s', methods=['GET', 'POST'])
 def results():
 
-		# request.query_string  전체 get parameter 받아오는 명령어
+	# request.query_string  전체 get parameter 받아오는 명령어
 
-		checkin = request.args['checkin']
-		checkout = request.args['checkout']
+	checkin = request.args['checkin']
+	checkout = request.args['checkout']
+	S = request.args['adults'] #소형견
+	M = request.args['children'] #중형견
+	L = request.args['infants'] #대형견
+	guests = int(S) + int(M) + int(L)
+	adults = int(S)
+	children = int(M)
+	infants = int(L)
+	print("number of guests = ", guests)
+	print("number of adults = ", adults)
+	print("number of children = ", children)
+	print("checkin  = ", checkin)
+	print("checkout = ", checkout)
+	print("=====================================================\n", request.query_string, "=====================================================\n")
 
-		S = request.args['adults'] #소형견
-		M = request.args['children'] #중형견
-		L = request.args['infants'] #대형견
-		guests = int(S) + int(M) + int(L)
-		adults = int(S)
-		children = int(M)
-		infants = int(L)
-		print("number of guests = ", guests)
-		print("number of adults = ", adults)
-		print("number of children = ", children)
-		print("checkin  = ", checkin)
-		print("checkout = ", checkout)
-		print("=====================================================\n", request.query_string, "=====================================================\n")
+	Info = function.Search_bytotal(guests)
 
-		Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
+	if Info == 0:
+		print("NULL\n")
 
-		# print("Info: ", Info)
+	# print("Info: ", Info)
 
-		total = 0
-		for i in Info:
-			total = total + 1
-		page = total/8 + 1
+	# total = 0
+	# for i in enumerate(Info):
+	# 	total = total + 1
+	# page = total/8 + 1
+	total = 0
+	page = 0
 
-		if 'email' in session:
+	if 'email' in session:
 
-			return render_template("search_results.html",
+		return render_template("search_results.html",
 		                        title='results',
 								session=session['email'],
 		                        info = Info,
 								total = total,
 								page = page)
 
-		return render_template("search_results.html",
+	return render_template("search_results.html",
 	   						title='results',
 							session=None,
 	                        info = Info,

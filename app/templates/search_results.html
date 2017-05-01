@@ -62,7 +62,8 @@
 
 
 
-
+                                <!-- info[0] -->
+                                {% if info[0] %}
                                 <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="140">
                                     <div class="listingCardWrapper_9kg52c" data-reactid="141">
                                         <div id="listing-13964145" class="listingContainer_f21qs6" data-reactid="142">
@@ -130,8 +131,10 @@
                             </div>
                         </div>
                     </div>
+                    <!-- info[0] -->
 
-
+                    <!-- info[1] -->
+                    {% elif info[1] %}
                     <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="240">
                         <div class="listingCardWrapper_9kg52c" data-reactid="241">
                             <div id="listing-13498067" class="listingContainer_f21qs6" data-reactid="242">
@@ -174,8 +177,10 @@
                     </div>
                 </div>
             </div>
+            <!-- info[1] -->
 
-
+            <!-- info[2] -->
+            {% elif info[2] %}
             <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="340">
                 <div class="listingCardWrapper_9kg52c" data-reactid="341">
                     <div id="listing-10318858" class="listingContainer_f21qs6" data-reactid="342">
@@ -218,8 +223,10 @@
             </div>
         </div>
     </div>
+    <!-- info[2] -->
 
-
+    <!-- info[3] -->
+    {% elif info[3] %}
     <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="434">
         <div class="listingCardWrapper_9kg52c" data-reactid="435">
             <div id="listing-15301195" class="listingContainer_f21qs6" data-reactid="436">
@@ -260,8 +267,10 @@
     </div>
 </div>
 </div>
+<!-- info[3] -->
 
 
+{% elif info[4] %}
 <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="531">
     <div class="listingCardWrapper_9kg52c" data-reactid="532">
         <div id="listing-17142489" class="listingContainer_f21qs6" data-reactid="533">
@@ -308,8 +317,10 @@
 </div>
 </div>
 </div>
+<!-- info[4] -->
 
 
+{% elif info[5] %}
 <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="607">
     <div class="listingCardWrapper_9kg52c" data-reactid="608">
         <div id="listing-12765435" class="listingContainer_f21qs6" data-reactid="609">
@@ -354,8 +365,10 @@
 </div>
 </div>
 </div>
+<!-- info[5] -->
 
 
+{% elif info[6] %}
 <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="704">
     <div class="listingCardWrapper_9kg52c" data-reactid="705">
         <div id="listing-17383987" class="listingContainer_f21qs6" data-reactid="706">
@@ -398,8 +411,10 @@
 </div>
 </div>
 </div>
+<!-- info[6] -->
 
-
+<!-- info[7] -->
+{% elif info[7] %}
 <div class="listing-card-wrapper col-sm-12-s col-md-6-s space-4" data-reactid="801">
     <div class="listingCardWrapper_9kg52c" data-reactid="802">
         <div id="listing-13099300" class="listingContainer_f21qs6" data-reactid="803">
@@ -445,6 +460,8 @@
 </div>
 </div>
 </div>
+<!-- info[7] -->
+{% endif %}
 
 
 
