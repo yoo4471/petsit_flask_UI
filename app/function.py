@@ -38,11 +38,11 @@ def Make_db_house():
     con.close()
 
  #petsitter.db 만드는 함수
- #Host , Cost_L, Cost_M, Cost_S , Start_Date , End_Date , Except_Date , Total , Large , Midium , Small
+ #Host , Cost_L, Cost_M, Cost_S , Start_Date , End_Date , Except_Date , Total , Large , Midium , Small, H_name, Intro
 def Make_db_petsitter():
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int, Intro text, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int,H_name text, Intro text, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -129,12 +129,13 @@ def Save_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except
     con.commit()
     con.close()
     return 1
-# cursor.execute("UPDATE house set Type = ?, Room = ? WHERE Host = ?", (H_Type, H_Room, E))
+
+
 #petsitter.db에 펫시터 정보 삽입하는 함수
-def Save_petsitter2(Host,Total , Large , Midium , Small, Intro):
+def Save_petsitter2(Host,Total , Large , Midium , Small, H_name ,Intro):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("UPDATE petsitter set Total =?, Large = ?, Midium =?, Small=? , Intro=? WHERE Host =?", (Total , Large , Midium , Small, Intro, Host))
+    cursor.execute("UPDATE petsitter set Total =?, Large = ?, Midium =?, Small=? , H_name = ?, Intro=? WHERE Host =?", (Total , Large , Midium , Small, H_name, Intro, Host))
     con.commit()
     con.close()
 
@@ -151,13 +152,14 @@ def Modify_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Exce
     con.commit()
     con.close()
 
-def Modify_petsitter2(Host,Total , Large , Midium , Small, Intro):
+def Modify_petsitter2(Host,Total , Large , Midium , Small, H_name, Intro):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
     cursor.execute("UPDATE petsitter  SET Total =? WHERE Host =? AND Total <> ?", (Total, Host, Total))
     cursor.execute("UPDATE petsitter  SET Large =? WHERE Host =? AND Large <> ?", (Large, Host, Large))
     cursor.execute("UPDATE petsitter  SET Midium =? WHERE Host =? AND Midium <> ?", (Midium, Host, Midium))
     cursor.execute("UPDATE petsitter  SET Small =? WHERE Host =? AND Small <> ?", (Small, Host, Small))
+    cursor.execute("UPDATE petsitter  SET H_name =? WHERE Host =? AND H_name <> ?", (H_name, Host, H_name))
     cursor.execute("UPDATE petsitter  SET Intro =? WHERE Host =? AND Intro <> ?", (Intro, Host, Intro))
     con.commit()
     con.close()
@@ -415,7 +417,7 @@ def Delete_image(Host, Asset):
 def Search_bytotal(T, L, M, S, S_date, E_date):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("SELECT Host, Cost_L, Cost_M, Cost_S, Total FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
+    cursor.execute("SELECT Host, Cost_L, Cost_M, Cost_S, Total, H_name FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
     data = cursor.fetchall()
     cursor.execute("SELECT COUNT(Host) FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
     cnt = cursor.fetchone()
