@@ -59,10 +59,10 @@ def results():
 	print("number of children = ", children)
 	print("checkin  = ", checkin)
 	print("checkout = ", checkout)
-	print("=====================================================\n", request.query_string, "=====================================================\n")
+	print("====================================================="+request.query_string+"=====================================================")
 
 	Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
-	PETSITTER = Info
+	petsitter = Info
 	# print("petsitter: ", petsitter)
 
 	if Info == 0:
@@ -91,10 +91,11 @@ def results():
 							total = total,
 							page = page)
 
-@app.route('/booking/', methods=['GET', 'POST'])
-def booking():
+@app.route('/booking/<num>', methods=['GET', 'POST'])
+def booking(num):
 
-	print("===============petsitter : ", petsitter, "================")
+	count = int(num)
+	print("===============petsitter : " + petsitter[count-1] + "================")
 
 	if 'email' in session:
 		return redirect(url_for('detail',petsitter = petsitter))
