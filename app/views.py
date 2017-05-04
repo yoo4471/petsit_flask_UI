@@ -10,6 +10,8 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 # app.secret_key = os.urandom(24)
 
 # index view function suppressed for brevity
+petsitter = ''
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -60,8 +62,9 @@ def results():
 	print("=====================================================\n", request.query_string, "=====================================================\n")
 
 	Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
+	PETSITTER = Info
+	# print("petsitter: ", petsitter)
 
-	# print("Info: ", Info)
 	if Info == 0:
 		total = 0
 		page = 0
@@ -88,17 +91,47 @@ def results():
 							total = total,
 							page = page)
 
-@app.route('/petsitter/booking', methods=['GET', 'POST'])
+@app.route('/booking/', methods=['GET', 'POST'])
 def booking():
-	if 'email' in session:
 
+	print("===============petsitter : ", petsitter, "================")
+
+	if 'email' in session:
+		return redirect(url_for('detail',petsitter = petsitter))
+
+	return redirect(url_for('detail',petsitter = petsitter))
+
+@app.route('/detail/<petsitter>', methods=['GET', 'POST'])
+def detail(petsitter):
+	print(petsitter)
+
+	if 'email' in session:
+		# checkin = request.args['checkin']
+		# Petsitter_detail = function.Read_petsitter(petsitter)
+		# if(Petsitter_detail):
 		return render_template("booking.html",
 							title='results',
-							session=session['email'])
+							session=session['email']
+							)
 
+	# checkin = request.args['checkin']
+	# Petsitter_detail = function.Read_petsitter(petsitter)
+	# if(Petsitter_detail):
 	return render_template("booking.html",
 						title='results',
 						session=None)
+
+#
+# @app.route('/guest/<guest>')
+# def hello_guest(guest):
+#    return 'Hello %s as Guest' % guest
+#
+# @app.route('/user/<name>')
+# def hello_user(name):
+#    if name =='admin':
+#       return redirect(url_for('hello_admin'))
+#    else:
+#       return redirect(url_for('hello_guest',guest = name))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -356,23 +389,6 @@ def enrollment_pet_vac():
                         title='pet',
 						session='OK')
 
-@app.route('/enrollment_pet/complete', methods=['GET', 'POST'])
-def enrollment_pet_complete():
-	# Check session
-	if not 'email' in session:
-		return redirect('/')
-
-
-	if request.method == 'POST':
-		print(request.form)
-		# ImmutableMultiDict([('elevatorType', 'yes'),
-		# 					('parkingType', 'no')])
-		return redirect('/')
-
-	return render_template("enrollment_pet_complete.html",
-                        title='progress',
-						session='OK')
-
 @app.route('/rooms', methods=['GET', 'POST'])
 def rooms():
 
@@ -536,7 +552,7 @@ def loop_insert():
         function.Increase_npet(user)
 
         function.Save_petsitter1(user, i+1000, i+2000, i+3000, '04/22/2017' , '05/13/2017' , '05/14/2017')
-        function.Save_petsitter2(user, 10 , 6 , 6 , 6, "intro")
+        function.Save_petsitter2(user, 10 , 6 , 6 , 6, "dongakgo + food + toy" ,"intro")
 
 # @app.route('/s/<name>/booking', methods=[GET,POST])
 # def booking(petsitter):
