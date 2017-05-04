@@ -5,12 +5,17 @@ from app import app
 import json
 from . import function
 import os
+from werkzeug.contrib.cache import SimpleCache
+cache = SimpleCache()
+
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 # app.secret_key = os.urandom(24)
 
 # index view function suppressed for brevity
-petsitter = ''
+PETSITTERS = ''
+USER_SEARCH = ''
+count = 0
 
 @app.route('/')
 @app.route('/index')
@@ -62,8 +67,15 @@ def results():
 	print("====================================================="+request.query_string+"=====================================================")
 
 	Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
-	petsitter = Info
-	# print("petsitter: ", petsitter)
+
+	# save petsitter
+	global PETSITTERS
+	PETSITTERS = Info
+	# save search
+	global USER_SEARCH
+	USER_SEARCH = guests, adults, children, infants, checkin, checkout
+
+	# print("petsitter: ", Info)
 
 	if Info == 0:
 		total = 0
@@ -91,36 +103,97 @@ def results():
 							total = total,
 							page = page)
 
-@app.route('/booking/<num>', methods=['GET', 'POST'])
+# def get_petsitter(petsitter_info):
+#     rv = cache.get(petsitter_info[0])
+#     if rv is None:
+#         rv = calculate_value()
+#         cache.set(PETSITTERS, rv, timeout=5 * 60)
+#     return rv
+
+@app.route('/booking/<int:num>', methods=['GET', 'POST'])
 def booking(num):
 
-	count = int(num)
-	print("===============petsitter : " + petsitter[count-1] + "================")
+	global PETSITTERS
+	global count
+	# print("===============petsitter : " , PETSITTERS[num-1] , "================")
+	# print("num-1: ", PETSITTERS[num-1])
+	count = num - 1
 
 	if 'email' in session:
-		return redirect(url_for('detail',petsitter = petsitter))
+		return redirect(url_for('detail',petsitter = num-1))
 
-	return redirect(url_for('detail',petsitter = petsitter))
+	return redirect(url_for('detail',petsitter = num-1))
 
-@app.route('/detail/<petsitter>', methods=['GET', 'POST'])
+@app.route('/detail/<int:petsitter>', methods=['GET', 'POST'])
 def detail(petsitter):
-	print(petsitter)
+
+	global PETSITTERS
+	global USER_SEARCH
+	# print("petsitter name : " , PETSITTERS[petsitter][0])
+
+	# get petsitter's information
+	detail_about_petsitter = function.Read_petsitter(PETSITTERS[petsitter][0])
+	print("detail : ", detail_about_petsitter)
+	print("petsitter: ", PETSITTERS[petsitter])
 
 	if 'email' in session:
-		# checkin = request.args['checkin']
-		# Petsitter_detail = function.Read_petsitter(petsitter)
-		# if(Petsitter_detail):
 		return render_template("booking.html",
-							title='results',
-							session=session['email']
+							title='booking',
+							session=session['email'],
+							detail_petsitter = detail_about_petsitter,
+							results = PETSITTERS[petsitter],
+							user = USER_SEARCH
 							)
 
-	# checkin = request.args['checkin']
-	# Petsitter_detail = function.Read_petsitter(petsitter)
-	# if(Petsitter_detail):
 	return render_template("booking.html",
-						title='results',
-						session=None)
+						title='booking',
+						session=None,
+						detail_petsitter = detail_about_petsitter,
+						results = PETSITTERS[petsitter],
+						user = USER_SEARCH
+						)
+
+@app.route('/payments/', methods=['GET', 'POST'])
+def payments():
+
+	global PETSITTERS
+	global USER_SEARCH
+	global count
+
+	print("count: ", count)
+
+	# get petsitter's information
+	detail_about_petsitter = function.Read_petsitter(PETSITTERS[count][0])
+
+
+	if 'email' in session:
+		if request.method == 'POST':
+			tm = request.form.get("time")
+			print("time:" , tm)
+
+			# 거래정보 저장 함수 이용
+
+			return redirect('/users/payments_list')
+
+		return render_template("payments.html",
+							title='payments',
+							session=session['email'],
+							detail_petsitter = detail_about_petsitter,
+							results = PETSITTERS[count],
+							user = USER_SEARCH
+							)
+
+	else:
+		# if request.method == 'POST':
+		# 	tm = request.form.get("time")
+		# 	print("time:" , tm)
+		# 	return redirect('/')
+
+		return render_template("signup.html",
+							title='SignUp',
+							error=None
+							)
+
 
 #
 # @app.route('/guest/<guest>')
@@ -286,22 +359,6 @@ def enrollment_home_car_elevator():
                         title='progress',
 						session='OK')
 
-@app.route('/enrollment_home/complete', methods=['GET', 'POST'])
-def enrollment_home_complete():
-	# Check session
-	if not 'email' in session:
-		return redirect('/')
-
-
-	if request.method == 'POST':
-		print(request.form)
-		# ImmutableMultiDict([('elevatorType', 'yes'),
-		# 					('parkingType', 'no')])
-		return redirect('/')
-
-	return render_template("enrollment_home_complete.html",
-                        title='progress',
-						session='OK')
 
 @app.route('/enrollment_pet/pet', methods=['GET', 'POST'])
 def enrollment_pet_pet():
@@ -435,6 +492,14 @@ def pets():
 	return render_template("user_pets.html",
                         title='MyProfile/pets',
 						session='OK', pets=pet)
+
+@app.route('/user/payments_list', methods=['GET','POST'])
+def payments_list():
+	if not 'email' in session:
+		return redirect('/')
+	return render_template("payments_list.html",
+                        title='MyPayments/list',
+						session='OK')
 
 @app.route('/users/edit', methods=['GET', 'POST'])
 def users_edit():

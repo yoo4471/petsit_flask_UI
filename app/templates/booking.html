@@ -20,7 +20,7 @@
     <link href="https://a0.muscache.com/airbnb/static/packages/common-3d6d481140b41b27096e4ee0d1f0f550.css" media="all" rel="stylesheet" type="text/css">
     <link href="https://a0.muscache.com/airbnb/static/packages/p3-cf357ea7eb2ce0e1cd57f7e125aea65e.css" media="screen" rel="stylesheet" type="text/css">
 
-    <title>cowzero, 서울, 한국</title>
+    <title> petsitter is {{ detail_petsitter[0][0] }}</title>
 </head>
 
 <body class="with-new-header has-epcot-header">
@@ -380,7 +380,7 @@
                                     </div>
                                     </span>
                                     <div itemprop="name" class="overflow summary-title-bottom-spacing title-2" id="listing_name" data-reactid="67">
-                                        동작구 집 전체 + 사료 완비 + 장난감</div>
+                                        {{ detail_petsitter[0][11] }}</div>
 
                                     <div data-reactid="68">
                                         <div id="display-address" class="text-muted" data-location="중구, 서울, 한국" data-reactid="69"><a href="#neighborhood" class="link-reset" data-reactid="70">
@@ -393,12 +393,12 @@
                                 <div class="hide-md hide-lg" data-reactid="98">
                                     <div class="col-sm-12" data-reactid="99">
                                         <div itemprop="name" class="overflow summary-title-bottom-spacing title-2" data-reactid="100">
-                                            동작구 집 전체 + 사료 완비 + 장난감</div>
+                                            {{ detail_petsitter[0][11] }}</div>
                                     </div>
 
                                     <div class="col-sm-12 va-container" data-reactid="101">
                                         <div class="va-middle address-and-rating-sm" data-reactid="102">
-                                            <div id="display-address" class="text-muted text-small" data-location="중구, 서울, 한국" data-reactid="103"><a href="#neighborhood" class="link-reset" data-reactid="104">중구, 서울, 한국</a>
+                                            <div id="display-address" class="text-muted text-small" data-location="중구, 서울, 한국" data-reactid="103"><a href="#neighborhood" class="link-reset" data-reactid="104">동작구, 서울, 한국</a>
                                                 <span data-reactid="105"> &nbsp; </span>
 
                                             </div>
@@ -422,7 +422,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div data-reactid="141"><a aria-hidden="true" class="link-reset text-wrap text-small" href="#host-profile" tabindex="-1" data-reactid="142">hyojung</a></div>
+                                    <div data-reactid="141"><a aria-hidden="true" class="link-reset text-wrap text-small" href="#host-profile" tabindex="-1" data-reactid="142">petsitter nickname</a></div>
                                 </div>
                             </div>
                             <!-- <div class="row row-condensed text-muted text-center hide-md hide-lg icon-row" data-reactid="143">
@@ -438,9 +438,9 @@
                                 <hr class="icon-row-divider" data-reactid="163">
                                 <div data-reactid="164">
                                     <div class="col-sm-3 icon--small-margin" data-reactid="165"><i class="icon icon-private-room icon-size" aria-hidden="true" data-reactid="166"></i><br data-reactid="167"><span class="text-small" data-reactid="168">개인실</span></div>
-                                    <div class="col-sm-3 icon--small-margin" data-reactid="169"><i class="icon icon-group icon-size" aria-hidden="true" data-reactid="170"></i><br data-reactid="171"><span class="text-small" data-reactid="172">소형견 2 마리</span></div>
-                                    <div class="col-sm-3 icon--small-margin" data-reactid="173"><i class="icon icon-rooms icon-size" aria-hidden="true" data-reactid="174"></i><br data-reactid="175"><span class="text-small" data-reactid="176">침실 1개</span></div>
-                                    <div class="col-sm-3 icon--small-margin" data-reactid="177"><i class="icon icon-double-bed icon-size" aria-hidden="true" data-reactid="178"></i><br data-reactid="179"><span class="text-small" data-reactid="180">침대 1개</span></div>
+                                    <div class="col-sm-3 icon--small-margin" data-reactid="169"><i class="icon icon-group icon-size" aria-hidden="true" data-reactid="170"></i><br data-reactid="171"><span class="text-small" data-reactid="172">총 {{ detail_petsitter[0][7] }} 마리</span></div>
+                                    <div class="col-sm-3 icon--small-margin" data-reactid="173"><i class="icon icon-rooms icon-size" aria-hidden="true" data-reactid="174"></i><br data-reactid="175"><span class="text-small" data-reactid="176">소형견 {{ detail_petsitter[0][10] }}마리 </span></div>
+                                    <div class="col-sm-3 icon--small-margin" data-reactid="177"><i class="icon icon-double-bed icon-size" aria-hidden="true" data-reactid="178"></i><br data-reactid="179"><span class="text-small" data-reactid="180">대형견 {{ detail_petsitter[0][8] }}마리</span></div>
                                 </div>
                             </div>
                         </div>
@@ -740,18 +740,23 @@
                         <meta content="KRW" itemprop="priceCurrency">
                         <meta content="54611" itemprop="price">
                         </span>
-                        <form method="post" action="/payments/book?s=bh4f3Rf3&amp;hosting_id=13852138" data-reactid="10">
+
+                        <form method="post" action="/payments/" data-reactid="10">
                             <div class="panel book-it-panel" data-reactid="11">
                                 <div class="panel-body panel-light" data-reactid="12">
                                     <div class="row row-condensed space-3" data-reactid="13">
                                         <div class="col-md-12" data-reactid="14">
                                             <div class="row row-condensed" data-reactid="15">
-                                                <div class="book-it__col" data-reactid="16"><label class="book-it__label book-it__fields" for="datespan-checkin" data-reactid="17"><div class="text_5mbkop-o_O-size_small_1gg2mc" data-reactid="18"><span data-reactid="19">체크인</span></div></label>
+                                                <div class="book-it__col" data-reactid="16"><label class="book-it__label book-it__fields" for="datespan-checkin" data-reactid="17"><div class="text_5mbkop-o_O-size_small_1gg2mc" data-reactid="18"><span data-reactid="19">
+                                                  체크인
+                                                </span></div></label>
                                                     <input type="text" class="checkin date-picker book-it__fields ui-datepicker-target" id="datespan-checkin" name="checkin" aria-describedby="datespan-checkin-description" value="2017/05/02" placeholder="년/월/일" data-reactid="20">
                                                     <span
                                                         class="screen-reader-only" id="datespan-checkin-description" aria-hidden="true" data-reactid="21">체크인 날짜를 년/월/일 형식으로 입력하세요</span>
                                                 </div>
-                                                <div class="book-it__col" data-reactid="22"><label class="book-it__label book-it__fields" for="datespan-checkout" data-reactid="23"><div class="text_5mbkop-o_O-size_small_1gg2mc" data-reactid="24"><span data-reactid="25">체크아웃</span></div></label>
+                                                <div class="book-it__col" data-reactid="22"><label class="book-it__label book-it__fields" for="datespan-checkout" data-reactid="23"><div class="text_5mbkop-o_O-size_small_1gg2mc" data-reactid="24"><span data-reactid="25">
+                                                  체크아웃
+                                                </span></div></label>
                                                     <input type="text" class="checkout date-picker book-it__fields ui-datepicker-target" id="datespan-checkout" name="checkout" aria-describedby="datespan-checkout-description" value="2017/05/03" placeholder="년/월/일" data-reactid="26"></div>
                                                 <span
                                                     class="screen-reader-only" id="datespan-checkout-description" aria-hidden="true" data-reactid="27">체크아웃 날짜를 년/월/일 형식으로 입력하세요</span>
@@ -760,8 +765,9 @@
 
                                         <div class="row row-condensed" data-reactid="28">
                                             <div class="col-md-12 space-top-3" data-reactid="29">
-                                                <div class="GuestPickerContainer book-it__fields" data-reactid="30"><label for="number_of_guests_13852138" class="book-it__label" data-reactid="31"><div class="text_5mbkop-o_O-size_small_1gg2mc" data-reactid="32"><span data-reactid="33">인원</span></div></label>
-                                                    <div class="GuestPickerTrigger" data-reactid="34"><button class="GuestPickerTrigger__button" type="button" data-reactid="35"><div class="guest-label" data-reactid="36"><span class="guest-label__text guest-label__text-guests" data-reactid="37"><span data-reactid="38">인원 2명</span></span></div><div class="dropdown-icon" data-reactid="39"><svg viewBox="0 0 18 18" aria-hidden="true" focusable="false" style="display:block;fill:currentColor;height:12px;width:12px;" data-reactid="40"><path fill-rule="evenodd" d="M16.291 4.295a1 1 0 1 1 1.414 1.415l-8 7.995a1 1 0 0 1-1.414 0l-8-7.995a1 1 0 1 1 1.414-1.415l7.293 7.29 7.293-7.29z" data-reactid="41"></path></svg></div></button>
+                                                <div class="GuestPickerContainer book-it__fields" data-reactid="30"><label for="number_of_guests_13852138" class="book-it__label" data-reactid="31"><div class="text_5mbkop-o_O-size_small_1gg2mc" data-reactid="32"><span data-reactid="33">총 마리</span></div></label>
+                                                    <div class="GuestPickerTrigger" data-reactid="34"><button class="GuestPickerTrigger__button" type="button" data-reactid="35"><div class="guest-label" data-reactid="36"><span class="guest-label__text guest-label__text-guests" data-reactid="37"><span data-reactid="38">소형견 2마리</span></span></div><div class="dropdown-icon" data-reactid="39">
+                                                      <svg viewBox="0 0 18 18" aria-hidden="true" focusable="false" style="display:block;fill:currentColor;height:12px;width:12px;" data-reactid="40"><path fill-rule="evenodd" d="M16.291 4.295a1 1 0 1 1 1.414 1.415l-8 7.995a1 1 0 0 1-1.414 0l-8-7.995a1 1 0 1 1 1.414-1.415l7.293 7.29 7.293-7.29z" data-reactid="41"></path></svg></div></button>
                                                         <div data-reactid="42">
                                                             <div class="GuestPicker hide" data-reactid="43">
                                                                 <div style="margin-top:16px;margin-bottom:16px;" data-reactid="44">
@@ -781,12 +787,14 @@
                                                                                 <div class="afterFallback_1iti0ju" data-reactid="56">
                                                                                     <div class="table_qtix31-o_O-buttons_y5lyrw" data-reactid="57">
                                                                                         <div class="middleAlignedCell_17u98ky-o_O-left_e4x16a" data-reactid="58"><button class="button_qq3sll-o_O-button_1ju6z0l-o_O-button_small_1h534dv-o_O-button_light_1a24k02" type="button" aria-label="차감" aria-controls="StepIncrementerRow-value-GuestCountFilter-GuestPicker-p3-book_it-adults"
-                                                                                                data-reactid="59"><span class="icon_16b32nl-o_O-icon_11jdm7g-o_O-icon_small_abrv9k" data-reactid="60"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="display:block;fill:currentColor;height:1em;width:1em;" data-reactid="61"><rect width="12" height="2" x="6" y="11" rx="1" data-reactid="62"></rect></svg></span></button></div>
+                                                                                                data-reactid="59"><span class="icon_16b32nl-o_O-icon_11jdm7g-o_O-icon_small_abrv9k" data-reactid="60">
+                                                                                                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="display:block;fill:currentColor;height:1em;width:1em;" data-reactid="61"><rect width="12" height="2" x="6" y="11" rx="1" data-reactid="62"></rect></svg></span></button></div>
                                                                                         <div id="StepIncrementerRow-value-GuestCountFilter-GuestPicker-p3-book_it-adults" role="region" aria-live="polite" aria-label="성인 2명" class="middleAlignedCell_17u98ky-o_O-center_12to336" data-reactid="63">
                                                                                             <div class="text_5mbkop-o_O-size_regular_x6m9oi" data-reactid="64">2</div>
                                                                                         </div>
                                                                                         <div class="middleAlignedCell_17u98ky-o_O-right_140n9qh" data-reactid="65"><button class="button_qq3sll-o_O-button_1ju6z0l-o_O-button_small_1h534dv-o_O-button_light_1a24k02" type="button" aria-label="추가" aria-controls="StepIncrementerRow-value-GuestCountFilter-GuestPicker-p3-book_it-adults"
-                                                                                                data-reactid="66" disabled=""><span class="icon_16b32nl-o_O-icon_1wy8x1d-o_O-icon_small_abrv9k" data-reactid="67"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="display:block;fill:currentColor;height:1em;width:1em;" data-reactid="68"><rect width="12" height="2" x="6" y="11" rx="1" data-reactid="69"></rect><rect width="2" height="12" x="11" y="6" rx="1" data-reactid="70"></rect></svg></span></button></div>
+                                                                                                data-reactid="66" disabled=""><span class="icon_16b32nl-o_O-icon_1wy8x1d-o_O-icon_small_abrv9k" data-reactid="67"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="display:block;fill:currentColor;height:1em;width:1em;" data-reactid="68"><rect width="12" height="2" x="6" y="11" rx="1" data-reactid="69"></rect>
+                                                                                                  <rect width="2" height="12" x="11" y="6" rx="1" data-reactid="70"></rect></svg></span></button></div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -873,7 +881,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div><input type="hidden" name="number_of_guests" value="2" data-reactid="142"><input type="hidden" name="number_of_adults" value="2" data-reactid="143"><input type="hidden" name="number_of_children" value="0"
+                                                    </div>
+                                                    <input type="hidden" name="number_of_guests" value="2" data-reactid="142"><input type="hidden" name="number_of_adults" value="2" data-reactid="143"><input type="hidden" name="number_of_children" value="0"
                                                         data-reactid="144">
                                                     <input type="hidden" name="number_of_infants" value="0" data-reactid="145"></div>
                                             </div>
@@ -892,13 +901,40 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+
+                                                  <!-- 소형견 -->
                                                     <tr class="price-item">
-                                                        <th class="hide-border-top" scope="row"><span><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e">₩54,611 x 1박</span></span>
+                                                        <th class="hide-border-top" scope="row"><span>
+                                                          <span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e">₩{{ detail_petsitter[0][3]}} x 1마리</span>
+                                                        </span>
                                                         </th>
                                                         <td class="text-right price-item__price hide-border-top"><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e"><div class=""><span><!-- react-text: 300 -->₩54,611<!-- /react-text --></span></div>
-                                        </span>
-                                        </td>
-                                        </tr>
+                                                    </span>
+                                                  </td>
+                                                  </tr>
+                                                  <!-- 소형견 -->
+                                                  <!-- 중형견 -->
+                                                  <tr class="price-item">
+                                                      <th class="hide-border-top" scope="row"><span>
+                                                        <span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e">₩{{ detail_petsitter[0][2]}} x 2마리</span>
+                                                      </span>
+                                                      </th>
+                                                      <td class="text-right price-item__price hide-border-top"><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e"><div class=""><span><!-- react-text: 300 -->₩54,611<!-- /react-text --></span></div>
+                                                  </span>
+                                                </td>
+                                                </tr>
+                                                <!-- 중형견 -->
+                                                <!-- 대형견 -->
+                                                <tr class="price-item">
+                                                    <th class="hide-border-top" scope="row"><span>
+                                                      <span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e">₩{{ detail_petsitter[0][1]}} x 2마리</span>
+                                                    </span>
+                                                    </th>
+                                                    <td class="text-right price-item__price hide-border-top"><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e"><div class=""><span><!-- react-text: 300 -->₩54,611<!-- /react-text --></span></div>
+                                                </span>
+                                              </td>
+                                              </tr>
+                                              <!-- 대형견 -->
                                         <tr>
                                             <th class="price-item__header" scope="row"><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_bold_153t78d-o_O-inline_g86r3e"><span>합계</span></span>
                                             </th>
@@ -910,7 +946,8 @@
                                     </div>
                                 </div>
                                 <!-- react-empty: 146 -->
-                                <div class="book-it__btn-width" data-reactid="147"><button type="submit" class="btn btn-primary btn-large btn-block" data-reactid="148"><div class="text_5mbkop-o_O-size_regular_x6m9oi-o_O-weight_bold_153t78d-o_O-color_inverse_1lslapz" data-reactid="149"><span data-reactid="150">예약하기</span></div></button>
+                                <div class="book-it__btn-width" data-reactid="147">
+                                  <button type="submit" class="btn btn-primary btn-large btn-block" data-reactid="148"><div class="text_5mbkop-o_O-size_regular_x6m9oi-o_O-weight_bold_153t78d-o_O-color_inverse_1lslapz" data-reactid="149"><span data-reactid="150">예약하기</span></div></button>
                                     <div data-reactid="151">
                                         <div class="messageContainer_12to336" data-reactid="152">
                                             <div style="margin-top:8px;" data-reactid="153"><small class="text_5mbkop-o_O-size_micro_16wifzf-o_O-color_muted_10k87om" data-reactid="154"><span data-reactid="155">예약 확정 전에는 요금이 청구되지 않습니다</span></small></div>
@@ -1403,7 +1440,9 @@
                                             <div style="margin-top:8px;" data-reactid="12">
                                                 <h4 class="space-4 section-title" data-reactid="13"><span data-reactid="14">상세 설명</span></h4>
                                                 <div class="simple-format-container" data-reactid="15">
-                                                    <p data-reactid="16"><span data-reactid="17">서울시티호텔 명동은 인기 있는 남대문 시장과 명동 쇼핑가에서 단 400m 거리에 편리하게 위치, 4호선 회현역은 170m 거리에 위치해 있습니다. 전객실 무료 Wi-Fi, 컴퓨터를 이용하실 수 있으며, 매일 아침 맛있는 무료 조식도 제공됩니다.</span></p>
+                                                    <p data-reactid="16"><span data-reactid="17">
+                                                      {{ detail_petsitter[0][12]}}
+                                                    </span></p>
                                                 </div>
 
                                                 <div class="row row-condensed" data-reactid="18">
@@ -1417,17 +1456,17 @@
                                                 <hr data-reactid="25">
                                                 <div class="row" data-reactid="26">
                                                     <div class="col-md-3 text-muted about-this-listing-section-title" data-reactid="27">
-                                                        <div data-reactid="28"><span data-reactid="29">숙소</span></div>
+                                                        <div data-reactid="28"><span data-reactid="29">정보</span></div>
                                                     </div>
                                                     <div class="col-md-9 bottom-spacing-negative-2" data-reactid="30">
                                                         <div class="row" data-reactid="31">
                                                             <div class="col-md-6" data-reactid="32">
                                                                 <div class="bottom-spacing-2" data-reactid="33">
                                                                     <div data-reactid="34">
-                                                                        <!-- react-text: 35 -->숙박 가능 인원:
+                                                                        <!-- react-text: 35 -->위탁 가능 마리:
                                                                         <!-- /react-text -->
                                                                         <!-- react-text: 36 -->
-                                                                        <!-- /react-text --><strong data-reactid="37">2</strong></div>
+                                                                        <!-- /react-text --><strong data-reactid="37">{{ detail_petsitter[0][7] }}</strong></div>
                                                                 </div>
                                                                 <div class="bottom-spacing-2" data-reactid="38">
                                                                     <div data-reactid="39">
@@ -1436,21 +1475,15 @@
                                                                         <!-- react-text: 41 -->
                                                                         <!-- /react-text --><strong data-reactid="42">1</strong>
                                                                         <!-- react-text: 43 -->
-                                                                        <!-- /react-text --><strong data-reactid="44">(욕실 단독 사용)</strong></div>
+                                                                        <!-- /react-text --><strong data-reactid="44">(펫 목욕 가능)</strong></div>
                                                                 </div>
-                                                                <div class="bottom-spacing-2" data-reactid="45">
-                                                                    <div data-reactid="46">
-                                                                        <!-- react-text: 47 -->침실:
-                                                                        <!-- /react-text -->
-                                                                        <!-- react-text: 48 -->
-                                                                        <!-- /react-text --><strong data-reactid="49">1</strong></div>
-                                                                </div>
+
                                                                 <div class="bottom-spacing-2" data-reactid="50">
                                                                     <div data-reactid="51">
-                                                                        <!-- react-text: 52 -->침대:
+                                                                        <!-- react-text: 52 -->방 개수:
                                                                         <!-- /react-text -->
                                                                         <!-- react-text: 53 -->
-                                                                        <!-- /react-text --><strong data-reactid="54">1</strong></div>
+                                                                        <!-- /react-text --><strong data-reactid="54">{{ results[8] }}</strong></div>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6" data-reactid="55">
@@ -1459,14 +1492,14 @@
                                                                         <!-- react-text: 58 -->체크인:
                                                                         <!-- /react-text -->
                                                                         <!-- react-text: 59 -->
-                                                                        <!-- /react-text --><strong data-reactid="60">14:00 이후</strong></div>
+                                                                        <!-- /react-text --><strong data-reactid="60">{{ detail_petsitter[0][4] }}</strong></div>
                                                                 </div>
                                                                 <div class="bottom-spacing-2" data-reactid="61">
                                                                     <div data-reactid="62">
                                                                         <!-- react-text: 63 -->체크아웃:
                                                                         <!-- /react-text -->
                                                                         <!-- react-text: 64 -->
-                                                                        <!-- /react-text --><strong data-reactid="65">11:00</strong></div>
+                                                                        <!-- /react-text --><strong data-reactid="65">{{ detail_petsitter[0][5] }}</strong></div>
                                                                 </div>
                                                                 <div class="bottom-spacing-2" data-reactid="66">
                                                                     <div data-reactid="67">
@@ -1474,16 +1507,10 @@
                                                                             <!-- react-text: 69 -->건물 유형:
                                                                             <!-- /react-text -->
                                                                             <!-- react-text: 70 -->
-                                                                            <!-- /react-text --><strong data-reactid="71">B&amp;B</strong></a>
+                                                                            <!-- /react-text --><strong data-reactid="71">{{ results[7] }}</strong></a>
                                                                     </div>
                                                                 </div>
-                                                                <div class="bottom-spacing-2" data-reactid="72">
-                                                                    <div data-reactid="73">
-                                                                        <!-- react-text: 74 -->숙소 유형 :
-                                                                        <!-- /react-text -->
-                                                                        <!-- react-text: 75 -->
-                                                                        <!-- /react-text --><strong data-reactid="76">개인실</strong></div>
-                                                                </div>
+                                                                
                                                             </div>
                                                         </div>
                                                         <!-- <div class="row" data-reactid="77">
