@@ -5,6 +5,7 @@ from app import app
 import json
 from . import function
 import os
+import time
 from werkzeug.contrib.cache import SimpleCache
 cache = SimpleCache()
 
@@ -16,6 +17,7 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 PETSITTERS = ''
 USER_SEARCH = ''
 count = 0
+total_charge = 0
 
 @app.route('/')
 @app.route('/index')
@@ -42,9 +44,71 @@ def index():
                         title='Welcome',
 						session=None)
 
-
+# none region
 @app.route('/s', methods=['GET', 'POST'])
-def results():
+def results_none_region():
+
+	# request.query_string  전체 get parameter 받아오는 명령어
+
+	checkin = request.args['checkin']
+	checkout = request.args['checkout']
+
+	S = request.args['adults'] #소형견
+	M = request.args['children'] #중형견
+	L = request.args['infants'] #대형견
+	guests = int(S) + int(M) + int(L)
+	adults = int(S)
+	children = int(M)
+	infants = int(L)
+	region = None
+
+	print("region = ", region)
+	print("number of small pet = ", guests)
+	print("number of medium pet = ", adults)
+	print("number of large pet = ", children)
+	print("checkin  = ", checkin)
+	print("checkout = ", checkout)
+	print("====================================================="+request.query_string+"=====================================================")
+
+	Info = function.Search_bytotal(region, guests, adults, children, infants, checkin, checkout)
+
+	# save petsitter
+	global PETSITTERS
+	PETSITTERS = Info
+	# save search
+	global USER_SEARCH
+	USER_SEARCH = guests, adults, children, infants, checkin, checkout
+
+	# print("petsitter: ", Info)
+
+	if Info == 0:
+		total = 0
+		page = 0
+		print("Info : ", Info)
+	else :
+		total = 0
+		for i in Info:
+			total = total + 1
+		page = total/8 + 1
+
+	if 'email' in session:
+
+		return render_template("search_results.html",
+		                        title='results',
+								session=session['email'],
+		                        info = Info,
+								total = total,
+								page = page)
+
+	return render_template("search_results.html",
+	   						title='results',
+							session=None,
+	                        info = Info,
+							total = total,
+							page = page)
+
+@app.route('/s/<region>', methods=['GET', 'POST'])
+def results(region):
 
 	# request.query_string  전체 get parameter 받아오는 명령어
 
@@ -59,14 +123,15 @@ def results():
 	children = int(M)
 	infants = int(L)
 
-	print("number of guests = ", guests)
-	print("number of adults = ", adults)
-	print("number of children = ", children)
+	print("region = ", region)
+	print("number of small pet = ", guests)
+	print("number of medium pet = ", adults)
+	print("number of large pet = ", children)
 	print("checkin  = ", checkin)
 	print("checkout = ", checkout)
 	print("====================================================="+request.query_string+"=====================================================")
 
-	Info = function.Search_bytotal(guests, adults, children, infants, checkin, checkout)
+	Info = function.Search_bytotal(region, guests, adults, children, infants, checkin, checkout)
 
 	# save petsitter
 	global PETSITTERS
@@ -167,14 +232,6 @@ def payments():
 
 
 	if 'email' in session:
-		if request.method == 'POST':
-			tm = request.form.get("time")
-			print("time:" , tm)
-
-			# 거래정보 저장 함수 이용
-			# function.Save_tran(C_key, PSID, CSID, TS, TE, TA, TH)
-
-			return redirect('/users/payments_list')
 
 		return render_template("payments.html",
 							title='payments',
@@ -494,13 +551,49 @@ def pets():
                         title='MyProfile/pets',
 						session='OK', pets=pet)
 
-@app.route('/user/payments_list', methods=['GET','POST'])
+@app.route('/user/payments_list/', methods=['GET','POST'])
 def payments_list():
 	if not 'email' in session:
 		return redirect('/')
-	return render_template("user_payments_list.html",
+
+	if request.method == 'POST':
+		# save payments result
+
+		global PETSITTERS
+		global USER_SEARCH
+		global count
+		global total_charge
+
+		print("petsitter: ", PETSITTERS[count])
+		print("user: ", )
+
+		User = session['email']
+
+		# petsitter/ user/ checkin/ checkout/ tran_complete / charge / etc
+
+		a = time.localtime()
+		date = str(a.tm_year) +"_" +str(a.tm_mon)+ "_" +str(a.tm_mday) + " "+str(a.tm_hour)+":"+str(a.tm_min)+":"+str(a.tm_sec)
+		function.Save_tran(PETSITTERS[count][0], User, USER_SEARCH[4], USER_SEARCH[5], date, str(total_charge), '\0')
+
+		# petsitter/ checkin/ checkout / charge
+		result = function.Search_tran(User)
+		print("result: ", result)
+
+		for i in result:
+			print("result: ", i)
+			return render_template("user_payments_list.html",
+	                        title='MyPayments/list',
+							session='OK',
+							result_list = i)
+
+	User = session['email']
+	result = function.Search_tran(User)
+	for i in result:
+		return render_template("user_payments_list.html",
                         title='MyPayments/list',
-						session='OK')
+						session='OK',
+						result_list = i)
+
 
 @app.route('/users/edit', methods=['GET', 'POST'])
 def users_edit():

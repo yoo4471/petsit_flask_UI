@@ -61,7 +61,7 @@ def Make_db_image():
 def Make_db_tran():
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS tran(C_key text NOT NULL, PSID text NOT NULL, CSID text NOT NULL, TS text NOT NULL, TE text NOT NULL, TC DATE DEFAULT (datetime('now','localtime')), TA text NOT NULL, TH text NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS tran(C_key text NOT NULL, PSID text NOT NULL, CSID text NOT NULL, TS text NOT NULL, TE text NOT NULL, TC text NOT NULL, TA text NOT NULL, TH text NOT NULL)")
     con.commit()
     con.close()
 
@@ -74,9 +74,10 @@ def Search_tran(E):
     con.close()
     return data
 
-def Save_tran(C_key, PSID, CSID, TS, TE, TA, TH):
+def Save_tran(PSID, CSID, TS, TE, TC, TA, TH):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
+    C_key = PSID + "#" +CSID +"#" +TC
     cursor.execute("INSERT INTO tran(C_key, PSID, CSID, TS, TE, TA, TH) VALUES (?,?,?,?,?,?,?)", (C_key, PSID, CSID, TS, TE, TA, TH))
     con.commit()
     con.close()
@@ -92,7 +93,7 @@ def Check_email(E):
     return data
 
 def Check_pw(E, P):
-    con = sqlite3.connect("pesitting.db")
+    con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
     cursor.execute("SELECT Email FROM member WHERE Email=? AND PW = ?",(E, P))
     data = cursor.fetchall()
@@ -414,10 +415,10 @@ def Delete_image(Host, Asset):
 
 #총마리수로 검색하는 경우
 #result : Host, Cost_L, Cost_M, Cost_S, total, address, type
-def Search_bytotal(T, L, M, S, S_date, E_date):
+def Search_bytotal(R, T, L, M, S, S_date, E_date):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("SELECT Host, Cost_L, Cost_M, Cost_S, Total, H_name FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
+    cursor.execute("SELECT Host, Cost_L, Cost_M, Cost_S, Total FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
     data = cursor.fetchall()
     cursor.execute("SELECT COUNT(Host) FROM petsitter WHERE Total >= ? AND Large >= ? AND Midium >= ? AND Small >=? AND Start_Date <=? AND End_Date >= ? AND Except_Date NOT BETWEEN Start_Date AND End_Date", (T, L, M, S, S_date, E_date))
     cnt = cursor.fetchone()
@@ -428,7 +429,11 @@ def Search_bytotal(T, L, M, S, S_date, E_date):
     result2 = []
     while i<cnt[0]:
         a = data[i][0]
-        cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (a, ))
+        if R == None:
+            cursor2.execute("SELECT Address, Type, Room FROM house WHERE Host = ?", (a, ))
+        else:
+            R2 = '%' + R + '%'
+            cursor2.execute("SELECT Address, Type, Room FROM house WHERE Address LIKE ? AND Host = ?", (R2, a, ))
         data2 = cursor2.fetchall()
         if data2 ==[]:
             return 0
