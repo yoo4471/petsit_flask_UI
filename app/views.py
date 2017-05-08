@@ -172,6 +172,7 @@ def payments():
 			print("time:" , tm)
 
 			# 거래정보 저장 함수 이용
+			# function.Save_tran(C_key, PSID, CSID, TS, TE, TA, TH)
 
 			return redirect('/users/payments_list')
 
@@ -497,7 +498,7 @@ def pets():
 def payments_list():
 	if not 'email' in session:
 		return redirect('/')
-	return render_template("payments_list.html",
+	return render_template("user_payments_list.html",
                         title='MyPayments/list',
 						session='OK')
 
