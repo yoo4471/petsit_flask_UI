@@ -424,10 +424,28 @@ def start_petsitter():
 		return redirect('/')
 
 	if request.method == 'POST':
-		print(request.form)
 
-	# User = session['email']
-	# info = function.Read_member(User)
+		print("start_petsitter : " , request.form)
+		Nickname = request.form.get("Nickname")
+		Count_Total = request.form.get("Count_Total")
+		Count_Large = request.form.get("Count_Large")
+		Count_Medium = request.form.get("Count_Medium")
+		Count_Small = request.form.get("Count_Small")
+		Cost_Large = request.form.get("Cost_Large")
+		Cost_Medium = request.form.get("Cost_Medium")
+		Cost_Small = request.form.get("Cost_Small")
+		Start_Date = request.form.get("Start_Date")
+		End_Date = request.form.get("End_Date")
+		Except_Date = request.form.get("Except_Date")
+		Home_Name = request.form.get("Home_Name")
+		Home_Intro = request.form.get("Home_Intro")
+
+		User = session['email']
+
+		function.Save_petsitter1(User, Nickname, Cost_Large, Cost_Medium, Cost_Small, Start_Date , End_Date , Except_Date)
+		function.Save_petsitter2(User, Count_Total , Count_Large , Count_Medium , Count_Small, Home_Name ,Home_Intro)
+
+		return redirect('/petsitter')
 
 
 	return render_template("start_petsitter.html",
@@ -521,6 +539,177 @@ def enrollment_pet_vac():
                         title='pet',
 						session='OK')
 
+
+@app.route('/modify_pet/pet', methods=['GET', 'POST'])
+def modify_pet_pet():
+    # Check session
+   if not 'email' in session:
+      return redirect('/')
+
+   # User = session['email']
+    # citycode = function.Check_citycode(User)
+   # if citycode[0][0] != '0':
+    #     return "already enroll home!"
+
+
+   if request.method == 'POST':
+      print(request.form)
+
+      # ImmutableMultiDict([('petName', 'mong'),
+      #                ('petGender', 'male'),
+      #                ('pet[birthday_month]', '1'),
+      #                ('pet[birthday_day]', '10'),
+      #                ('pet[birthday_year]', '2016')])
+
+      User = session['email']
+
+      petname = request.form.get("petName")
+      petgender = request.form.get("petGender")
+      month = request.form.get("pet[birthday_month]")
+      day = request.form.get("pet[birthday_day]")
+      year = request.form.get("pet[birthday_year]")
+
+      petbirth = year+"-"+month+"-"+day
+      function.Modify_pet_pet(User, petname, petgender,petbirth)
+
+      return redirect('/modify_pet/size')
+
+   return render_template("modify_pet.html",
+                        title='pet',
+                  		session='OK')
+
+@app.route('/modify_pet/size', methods=['GET', 'POST'])
+def modify_pet_size():
+
+   if not 'email' in session:
+      return redirect('/')
+
+   if request.method == 'POST':
+      print(request.form)
+
+      # ImmutableMultiDict([('pet-breed', '1'),
+      #                ('pet-size', '3')])
+
+      User = session['email']
+
+      breed = request.form.get("breed")
+      size = request.form.get("size")
+      function.Modify_pet_size(User, breed, size)
+
+      return redirect('/modify_pet/vac')
+
+   return render_template("modify_pet_size.html",
+                        title='pet',
+                  		session='OK')
+
+@app.route('/modify_pet/vac', methods=['GET', 'POST'])
+def modify_pet_vac():
+
+   if not 'email' in session:
+      return redirect('/')
+
+   if request.method == 'POST':
+      print(request.form)
+
+      # ImmutableMultiDict([('ns', '1'),
+      #                ('vac', '2')])
+      User = session['email']
+      ns = request.form.get("ns")
+      vac = request.form.get("vac")
+      function.Modify_pet_vac(User, ns, vac)
+
+      return redirect('/pets')
+
+   return render_template("modify_pet_vac.html",
+                        title='pet',
+                  		session='OK')
+
+@app.route('/modify_home/address', methods=['GET', 'POST'])
+def modify_home_address():
+   # Check session
+    if not 'email' in session:
+        return redirect('/')
+    User = session['email']
+    citycode = function.Check_citycode(User)
+
+    # if citycode[0][0] != '0':
+        # return "already enroll home!"
+
+    if request.method == 'POST':
+        print(request.form)
+      # ImmutableMultiDict([('country_code', 'US'),
+      #                ('city', '1'),
+      #                ('street', '1'),
+      #                ('zipcode', '1'),
+      #                ('apt', '1'),
+      #                ('state', '1')])
+        state = request.form.get("state")
+        city = request.form.get("city")
+        street = request.form.get("street")
+        apt = request.form.get("apt")
+        zipcode = request.form.get("zipcode")
+        function.Modify_home_address(User, state, city, street, apt, zipcode)
+        citycode = zipcode[0:3]
+        function.Update_Citycode(User, citycode)
+        return redirect('/modify_home/room')
+
+   # if citycode[0][0] != '0':
+        # city =
+    return render_template("modify_address.html",
+                        title='progress',
+                  session='OK',
+                  city='')
+
+
+@app.route('/modify_home/room', methods=['GET', 'POST'])
+def modify_home_room():
+   # Check session
+   if not 'email' in session:
+      return redirect('/')
+
+
+   if request.method == 'POST':
+      User = session['email']
+      print(request.form)
+      # ImmutableMultiDict([('house_type', '2'),
+      #                ('number_of_room', '1')])
+
+      house_type = request.form.get("house_type")
+      if house_type == '1':
+         house_type = 'A'
+      elif house_type == '2':
+         house_type = 'P'
+      room = request.form.get("number_of_room")
+      function.Modify_home_room(User, house_type, room)
+      return redirect('/modify_home/car_elevator')
+
+   return render_template("modify_room.html",
+                        title='progress',
+                  		session='OK')
+
+@app.route('/modify_home/car_elevator', methods=['GET', 'POST'])
+def modify_home_car_elevator():
+   # Check session
+   if not 'email' in session:
+      return redirect('/')
+
+
+   if request.method == 'POST':
+      User = session['email']
+      print(request.form)
+      # ImmutableMultiDict([('elevatorType', 'yes'),
+      #                ('parkingType', 'no')])
+      print(User)
+      elevator = house_type = request.form.get("elevatorType")
+      parking = house_type = request.form.get("parkingType")
+      function.Modify_home_car_elevator(User, elevator, parking)
+      return redirect('/rooms')
+
+
+   return render_template("modify_car_elevator.html",
+                        title='progress',
+                  		session='OK')
+
 @app.route('/rooms', methods=['GET', 'POST'])
 def rooms():
 
@@ -573,15 +762,13 @@ def pesitter():
 	if not 'email' in session:
 		return redirect('/')
 
-	if request.method == 'POST':
-		print(request.form)
-
 	User = session['email']
-	# check_pet = function.Check_npet(User)
+	petsitter = function.Read_petsitter(User)
 
 	return render_template("user_petsitter.html",
                         title='MyProfile/pets',
-						session='OK', pets=0)
+						session='OK',
+						petsitter = petsitter)
 
 @app.route('/user/payments_list/', methods=['GET','POST'])
 def payments_list():
