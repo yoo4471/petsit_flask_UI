@@ -6,6 +6,22 @@ import sqlite3
 # PN: 펫 수 (1, 0) , 0으로 초기화
 # CC: 집등록할경우 해당 집의 city code, 0으로 초기화
 # AP: 펫시팅 가능 여부 (1, 0) , 0으로 초기화
+def Make_db_key(S):
+    con = sqlite3.connect("petsitting.db")
+    cursor = con.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS key(key_value text NOT NULL UNIQUE)")
+    cursor.execute("INSERT INTO key(key_value) VALUES (?)", (S))
+    con.commit()
+    con.close()
+
+def Get_key():
+    con = sqlite3.connect("petsitting.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM key ",)
+    data = cursor.fetchall()
+    con.commit()
+    con.close()
+    return data[0][0]
 
 def Make_db_member():
     con = sqlite3.connect("petsitting.db")
@@ -42,7 +58,7 @@ def Make_db_house():
 def Make_db_petsitter():
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int,H_name text, Intro text, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS petsitter(Host text NOT NULL, Nickname text , Cost_L int, Cost_M int, Cost_S int, Start_Date text, End_Date text, Except_Date text, Total int, Large int, Midium int, Small int,H_name text, Intro text, Time DATE DEFAULT (datetime('now','localtime')), PRIMARY KEY(Host), CONSTRAINT fk_petsitter FOREIGN KEY (Host) REFERENCES member(Email))")
     con.commit()
     con.close()
 
@@ -61,24 +77,24 @@ def Make_db_image():
 def Make_db_tran():
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS tran(C_key text NOT NULL, PSID text NOT NULL, CSID text NOT NULL, TS text NOT NULL, TE text NOT NULL, TC text NOT NULL, TA text NOT NULL, TH text NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS tran(C_key text NOT NULL, PSID text NOT NULL, PS_NickName text NOT NULL, CSID text NOT NULL, TS text NOT NULL, TE text NOT NULL, TC text NOT NULL, TA text NOT NULL, TH text NOT NULL)")
     con.commit()
     con.close()
 
 def Search_tran(E):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM tran WHERE PSID =? OR CSID =? ", (E,E ))
+    cursor.execute("SELECT * FROM tran WHERE PSID =? OR CSID =? ORDER BY TC DESC", (E,E ))
     data = cursor.fetchall()
     con.commit()
     con.close()
     return data
 
-def Save_tran(PSID, CSID, TS, TE, TC, TA, TH):
+def Save_tran(PSID, PS_NickName, CSID, TS, TE, TC, TA, TH):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
     C_key = PSID + "#" +CSID +"#" +TC
-    cursor.execute("INSERT INTO tran(C_key, PSID, CSID, TS, TE, TA, TH) VALUES (?,?,?,?,?,?,?)", (C_key, PSID, CSID, TS, TE, TA, TH))
+    cursor.execute("INSERT INTO tran(C_key, PSID, PS_NickName, CSID, TS, TE, TC, TA, TH) VALUES (?,?,?,?,?,?,?,?,?)", (C_key, PSID, PS_NickName, CSID, TS, TE,  TC, TA, TH))
     con.commit()
     con.close()
 
@@ -120,11 +136,11 @@ def Check_npet(E):
     return data
 
 #petsitter.db에 펫시터 정보 삽입하는 함수
-def Save_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date):
+def Save_petsitter1(Host, Nickname, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
     try:
-         cursor.execute("INSERT INTO petsitter (Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date ) VALUES (?, ?, ?, ? ,?, ?, ?)", (Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date))
+         cursor.execute("INSERT INTO petsitter (Host, Nickname, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date ) VALUES (?, ?, ?, ?, ? ,?, ?, ?)", (Host, Nickname, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date))
     except:
         return 0
     con.commit()
@@ -141,9 +157,10 @@ def Save_petsitter2(Host,Total , Large , Midium , Small, H_name ,Intro):
     con.close()
 
 # cursor.execute("UPDATE house SET State = ? WHERE Host = ? AND State <> ? ", (H_State,E, H_State))
-def Modify_petsitter1(Host, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date):
+def Modify_petsitter1(Host, Nickname, Cost_L, Cost_M, Cost_S, Start_Date , End_Date , Except_Date):
     con = sqlite3.connect("petsitting.db")
     cursor = con.cursor()
+    cursor.execute("UPDATE petsitter  SET Nickname =? WHERE Host =? AND Nickname <> ?", (Nickname, Host, Nickname))
     cursor.execute("UPDATE petsitter  SET Cost_L =? WHERE Host =? AND Cost_L <> ?", (Cost_L, Host, Cost_L))
     cursor.execute("UPDATE petsitter  SET Cost_M =? WHERE Host =? AND Cost_M <> ?", (Cost_M, Host, Cost_M))
     cursor.execute("UPDATE petsitter  SET Cost_S =? WHERE Host =? AND Cost_S <> ?", (Cost_S, Host, Cost_S))

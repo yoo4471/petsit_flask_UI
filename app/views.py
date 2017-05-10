@@ -417,6 +417,22 @@ def enrollment_home_car_elevator():
                         title='progress',
 						session='OK')
 
+@app.route('/start/', methods=['GET', 'POST'])
+def start_petsitter():
+
+	if not 'email' in session:
+		return redirect('/')
+
+	if request.method == 'POST':
+		print(request.form)
+
+	# User = session['email']
+	# info = function.Read_member(User)
+
+
+	return render_template("start_petsitter.html",
+                        title='Search',
+						session='OK')
 
 @app.route('/enrollment_pet/pet', methods=['GET', 'POST'])
 def enrollment_pet_pet():
@@ -551,6 +567,22 @@ def pets():
                         title='MyProfile/pets',
 						session='OK', pets=pet)
 
+@app.route('/petsitter', methods=['GET', 'POST'])
+def pesitter():
+
+	if not 'email' in session:
+		return redirect('/')
+
+	if request.method == 'POST':
+		print(request.form)
+
+	User = session['email']
+	# check_pet = function.Check_npet(User)
+
+	return render_template("user_petsitter.html",
+                        title='MyProfile/pets',
+						session='OK', pets=0)
+
 @app.route('/user/payments_list/', methods=['GET','POST'])
 def payments_list():
 	if not 'email' in session:
@@ -564,7 +596,7 @@ def payments_list():
 		global count
 		global total_charge
 
-		print("petsitter: ", PETSITTERS[count])
+		# print("petsitter: ", PETSITTERS[count])
 		print("user: ", )
 
 		User = session['email']
@@ -573,26 +605,30 @@ def payments_list():
 
 		a = time.localtime()
 		date = str(a.tm_year) +"_" +str(a.tm_mon)+ "_" +str(a.tm_mday) + " "+str(a.tm_hour)+":"+str(a.tm_min)+":"+str(a.tm_sec)
-		function.Save_tran(PETSITTERS[count][0], User, USER_SEARCH[4], USER_SEARCH[5], date, str(total_charge), '\0')
+
+		petsitter_nickname = function.Read_petsitter(PETSITTERS[count][0])
+		print("petsitter_nickname :",petsitter_nickname[0][1])
+
+		function.Save_tran(PETSITTERS[count][0], petsitter_nickname[0][1], User, USER_SEARCH[4], USER_SEARCH[5], date, str(total_charge), '\0')
 
 		# petsitter/ checkin/ checkout / charge
 		result = function.Search_tran(User)
-		print("result: ", result)
+		# print("result: ", result)
 
-		for i in result:
-			print("result: ", i)
-			return render_template("user_payments_list.html",
+		return render_template("user_payments_list.html",
 	                        title='MyPayments/list',
 							session='OK',
-							result_list = i)
+							result_list = result)
 
 	User = session['email']
 	result = function.Search_tran(User)
-	for i in result:
-		return render_template("user_payments_list.html",
+
+	# print("result: ", result)
+
+	return render_template("user_payments_list.html",
                         title='MyPayments/list',
 						session='OK',
-						result_list = i)
+						result_list = result)
 
 
 @app.route('/users/edit', methods=['GET', 'POST'])
@@ -613,10 +649,9 @@ def users_edit():
 @app.route('/test', methods=['GET', 'POST'])
 def test():
 
-
 	if 'email' in session:
 
-		return render_template("test_search.html",
+		return render_template("test_petsitter.html",
                         title='Welcome',
 						session=session['email']
 						)
@@ -628,10 +663,11 @@ def test():
 	# info = function.Read_member(User)
 
 
-	return render_template("test_search.html",
+	return render_template("test_petsitter.html",
                         title='Search',
 						session='OK',
 						info = info)
+
 @app.route('/test2', methods=['GET', 'POST'])
 def test2():
 
@@ -711,7 +747,7 @@ def loop_insert():
         function.Save_pet_vac(user, 'ns', 'vac')
         function.Increase_npet(user)
 
-        function.Save_petsitter1(user, i+1000, i+2000, i+3000, '04/22/2017' , '05/13/2017' , '05/14/2017')
+        function.Save_petsitter1(user, 'lovePet',i+1000, i+2000, i+3000, '04/22/2017' , '05/13/2017' , '05/14/2017')
         function.Save_petsitter2(user, 10 , 6 , 6 , 6, "dongakgo + food + toy" ,"intro")
 
 # @app.route('/s/<name>/booking', methods=[GET,POST])
