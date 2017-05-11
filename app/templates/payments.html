@@ -28,7 +28,7 @@
 
     <div id="main-view" class="main-view page-container-responsive     space-top-md-6 space-md-6 space-top-lg-6 space-lg-6">
 
-      <form action="/user/payments_list/" method="post" id="checkout-form">
+      <form action="/user/payments/ing" method="post" id="checkout-form">
 
         <div class="row">
           <div class="col-sm-12 p4-error-header space-1">
@@ -124,11 +124,11 @@
                       <tbody data-reactid="72">
                         <tr class="price-item">
                           <th class="" scope="row"><span><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e">
-                            ₩21,617 x 1박
+                            ₩{{charge}} x {{term}}박
                           </span><span><span><!-- react-empty: 143 --></span></span>
                             </span>
                           </th>
-                          <td class="text-right price-item__price"><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e"><div class=""><span><!-- react-text: 149 -->₩21,617<!-- /react-text --></span></div>
+                          <td class="text-right price-item__price"><span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-weight_light_1nmzz2x-o_O-inline_g86r3e"><div class=""><span><!-- react-text: 149 -->₩{{total}}<!-- /react-text --></span></div>
                   </span>
                   </td>
                   </tr>
@@ -143,7 +143,7 @@
                   <td class="text-right price-item__price" data-reactid="112">
                     <span class="text_5mbkop-o_O-size_small_1gg2mc-o_O-inline_g86r3e" data-reactid="113">
                       <div class="" data-reactid="114"><span data-reactid="115">
-                        <!-- react-text: 116 -->₩23,892<!-- /react-text --></span>
+                        <!-- react-text: 116 -->₩{{total}}<!-- /react-text --></span>
                         <sup data-reactid="117">KRW</sup></div></span></td>
                       </tr></tbody></table></button>
                   <!-- react-empty: 118 -->
@@ -549,8 +549,7 @@
         <div class="space-7" data-reactid="144">
           <div data-reactid="145"><label for="guest-message-input" data-reactid="146"><span data-reactid="147">호스트에게 펫 주의사항을 알려주세요.</span><span data-reactid="148"></span></label>
             <div class="guest-message-textarea" data-reactid="149">
-              <div data-reactid="150"><textarea aria-label="호스트에게 메시지를 보내세요" class="" id="message-to-host-input" name="message_to_host" placeholder="펫이 낯가림이 심한가요? 아니면 먹는 것을 많이 가리나요? 어떻게 맡겨주길 원하는 지 알려주시면 펫시터가 준비하는데 도움이 됩니다. 자기 소개도 잊지 마세요! :)" rows="4" data-reactid="151">
-                안녕하세요.</textarea></div>
+              <div data-reactid="150"><textarea aria-label="호스트에게 메시지를 보내세요" class="" id="message-to-host-input" name="message_to_host" placeholder="펫이 낯가림이 심한가요? 아니면 먹는 것을 많이 가리나요? 어떻게 맡겨주길 원하는 지 알려주시면 펫시터가 준비하는데 도움이 됩니다. 자기 소개도 잊지 마세요! :)" rows="4" data-reactid="151">안녕하세요.</textarea></div>
             </div>
           </div>
           <div class="space-top-1" data-reactid="152">

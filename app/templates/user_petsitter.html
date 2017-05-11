@@ -15,7 +15,7 @@
                 </li>
 
                 <div class="space-top-4 space-4">
-                    <a href="/start/" aria-selected="false" class="btn btn-host">수정하기</a>
+                    <a href="#/start/" aria-selected="false" class="btn btn-host">수정하기</a>
                 </div>
             </ul>
 
@@ -35,14 +35,15 @@
                                     <div class="row row-table"><i class="icon icon-size-1 icon-remove icon-remove-listing show-sm"></i>
                                         <div class="col-middle space-sm-2 space-top-sm-4 col-md-5 listing-photo">
 
-                                            <!-- <a href="/manage-listing/17629582/photos"> -->
+                                            <a href="#">
                                                 <div class="media-photo media-photo-block-lg">
                                                     <div class="media-cover text-center">
-                                                      <img class="img-responsive-height" src="{{ url_for('static', filename= 'img/dog.png') }}" alt="...">
-                                                      <!-- <img class="img-responsive-height" src="https://a0.muscache.com/airbnb/static/page3/v3/room_default_no_photos-f209d3d70c1bed81fb0822b68e913045.png"> -->
+                                                      <!-- <img src="{{url_for('static', filename='ayrton_senna_movie_wallpaper_by_bashgfx-d4cm6x6.jpg')}}" /> -->
+                                                      <!-- <img class="img-responsive-height" src="../static/img/dog.png" alt="petsitter" /> -->
+                                                      <img class="img-responsive-height" src="https://a0.muscache.com/airbnb/static/page3/v3/room_default_no_photos-f209d3d70c1bed81fb0822b68e913045.png">
                                                     </div>
                                                 </div>
-                                            <!-- </a> -->
+                                            </a>
                                         </div>
                                         <div class="col-sm-10 col-lg-7 col-middle">
                                             <div class="row row-table">
@@ -51,21 +52,32 @@
                                                         <!-- <div class="progress progress-bar__lean" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="7">
                                                             <div class="progress-bar progress-bar-success progress-bar__babu" style="width: 100%;"></div>
                                                         </div> -->
-                                                        <div class="text-babu space-top-1"><span>가장 최근 등록한 정보</span></div>
+                                                        <div class="text-babu space-top-1"><span> {{petsitter[0][12]}}</span></div>
                                                         <div class="space-top-2"></div>
                                                     </div>
                                                 </div>
-                                            </div><span class="h4"><a href="/manage-listing/17629582" class="text-normal"><span><!-- react-text: 27 -->
+                                            </div>
+                                            <span class="h4"><span><!-- react-text: 27 -->
                                               <!-- 소형견 : 장모치와와<br> -->
                                               <!-- /react-text -->
-
-
-                                          </span></a>
+                                              <ul>
+                                                <li>총 {{ petsitter[0][8] }}마리 </li>
+                                                <li>소형견 {{petsitter[0][11]}}마리 중형견 {{petsitter[0][10]}}마리 대형견 {{petsitter[0][9]}}마리</li>
+                                                <li>소형견 ₩{{ petsitter[0][4] }}</li>
+                                                <li>중형견 ₩{{ petsitter[0][3] }}</li>
+                                                <li>대형견 ₩{{ petsitter[0][2] }}</li>
+                                                <li>{{petsitter[0][5]}} 부터 {{petsitter[0][6]}} 까지 가능합니다.</li>
+                                                {% if petsitter[0][7] %}
+                                                <li>{{petsitter[0][7]}} 제외</li>
+                                                {% else %}
+                                                <li>불가능한 날짜가 없습니다.</li>
+                                                {% endif %}
+                                          </span>
                                             </span>
 
                                             <div class="text-muted text-grey space-top-1 last-modified-date"><span>최종 업데이트: {{ petsitter[0][14] }}</span></div>
                                             <div class="space-top-4">
-                                                <a class="btn btn__first-btn btn-primary" href="/enrollment_pet/pet"><span>등록 수정하기</span></a>
+                                                <a class="btn btn__first-btn btn-primary" href="/modify_start"><span>등록 수정하기</span></a>
                                                 <a class="btn btn__second-btn" href="#"><span>삭제하기</span></a></div><noscript></noscript></div>
                                     </div>
                                 </li>

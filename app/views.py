@@ -7,6 +7,8 @@ from . import function
 import os
 import time
 from werkzeug.contrib.cache import SimpleCache
+from datetime import date
+
 cache = SimpleCache()
 
 # set the secret key.  keep this really secret:
@@ -48,14 +50,12 @@ def index():
 @app.route('/s', methods=['GET', 'POST'])
 def results_none_region():
 
-	# request.query_string  전체 get parameter 받아오는 명령어
-
 	checkin = request.args['checkin']
 	checkout = request.args['checkout']
 
-	S = request.args['adults'] #소형견
-	M = request.args['children'] #중형견
-	L = request.args['infants'] #대형견
+	S = request.args['adults'] #small
+	M = request.args['children'] #medium
+	L = request.args['infants'] #large
 	guests = int(S) + int(M) + int(L)
 	adults = int(S)
 	children = int(M)
@@ -79,7 +79,7 @@ def results_none_region():
 	global USER_SEARCH
 	USER_SEARCH = guests, adults, children, infants, checkin, checkout
 
-	# print("petsitter: ", Info)
+	pass_search = "all location", checkin, checkout, guests, adults, children, infants
 
 	if Info == 0:
 		total = 0
@@ -98,32 +98,33 @@ def results_none_region():
 								session=session['email'],
 		                        info = Info,
 								total = total,
-								page = page)
+								page = page,
+								print_search = pass_search)
 
 	return render_template("search_results.html",
 	   						title='results',
 							session=None,
 	                        info = Info,
 							total = total,
-							page = page)
+							page = page,
+							print_search = pass_search)
 
+@app.route('/s/', defaults={'region': ''}, methods=['GET', 'POST'])
 @app.route('/s/<region>', methods=['GET', 'POST'])
 def results(region):
-
-	# request.query_string  전체 get parameter 받아오는 명령어
 
 	checkin = request.args['checkin']
 	checkout = request.args['checkout']
 
-	S = request.args['adults'] #소형견
-	M = request.args['children'] #중형견
-	L = request.args['infants'] #대형견
+	S = request.args['adults'] #small
+	M = request.args['children'] #medium
+	L = request.args['infants'] #large
 	guests = int(S) + int(M) + int(L)
 	adults = int(S)
 	children = int(M)
 	infants = int(L)
 
-	print("region = ", region)
+	print(region)
 	print("number of small pet = ", guests)
 	print("number of medium pet = ", adults)
 	print("number of large pet = ", children)
@@ -140,7 +141,9 @@ def results(region):
 	global USER_SEARCH
 	USER_SEARCH = guests, adults, children, infants, checkin, checkout
 
-	# print("petsitter: ", Info)
+	pass_search = region, checkin, checkout, guests, adults, children, infants
+
+	print("===========with region=========")
 
 	if Info == 0:
 		total = 0
@@ -159,14 +162,16 @@ def results(region):
 								session=session['email'],
 		                        info = Info,
 								total = total,
-								page = page)
+								page = page,
+								print_search = pass_search)
 
 	return render_template("search_results.html",
 	   						title='results',
 							session=None,
 	                        info = Info,
 							total = total,
-							page = page)
+							page = page,
+							print_search = pass_search)
 
 # def get_petsitter(petsitter_info):
 #     rv = cache.get(petsitter_info[0])
@@ -194,6 +199,7 @@ def detail(petsitter):
 
 	global PETSITTERS
 	global USER_SEARCH
+	global total_charge
 	# print("petsitter name : " , PETSITTERS[petsitter][0])
 
 	# get petsitter's information
@@ -201,13 +207,23 @@ def detail(petsitter):
 	print("detail : ", detail_about_petsitter)
 	print("petsitter: ", PETSITTERS[petsitter])
 
+	cost_small = detail_about_petsitter[0][2] * USER_SEARCH[1]
+	cost_medium = detail_about_petsitter[0][3] * USER_SEARCH[2]
+	cost_large = detail_about_petsitter[0][4] * USER_SEARCH[3]
+	add_all = cost_small + cost_medium + cost_large
+
+	total = cost_small, cost_medium, cost_large, add_all
+
+	total_charge = add_all
+
 	if 'email' in session:
 		return render_template("booking.html",
 							title='booking',
 							session=session['email'],
 							detail_petsitter = detail_about_petsitter,
 							results = PETSITTERS[petsitter],
-							user = USER_SEARCH
+							user = USER_SEARCH,
+							total_cost = total
 							)
 
 	return render_template("booking.html",
@@ -215,7 +231,8 @@ def detail(petsitter):
 						session=None,
 						detail_petsitter = detail_about_petsitter,
 						results = PETSITTERS[petsitter],
-						user = USER_SEARCH
+						user = USER_SEARCH,
+						total_cost = total
 						)
 
 @app.route('/payments/', methods=['GET', 'POST'])
@@ -224,28 +241,45 @@ def payments():
 	global PETSITTERS
 	global USER_SEARCH
 	global count
+	global total_charge
 
 	print("count: ", count)
 
-	# get petsitter's information
-	detail_about_petsitter = function.Read_petsitter(PETSITTERS[count][0])
-
-
 	if 'email' in session:
+		# get petsitter's information
+		detail_about_petsitter = function.Read_petsitter(PETSITTERS[count][0])
+
+		checkin = USER_SEARCH[4]
+		checkout = USER_SEARCH[5]
+
+		checkin_year = int(checkin[6:10])
+		checkin_month = int(checkin[0:2])
+		checkin_day =int(checkin[3:5])
+
+		checkout_year = int(checkout[6:10])
+		checkout_month = int(checkout[0:2])
+		checkout_day =int(checkout[3:5])
+
+		d0 = date(checkin_year, checkin_month, checkin_day)
+		d1 = date(checkout_year, checkout_month, checkout_day)
+		term = d1 - d0
+		# print(term.days)
+		temp_charge = total_charge
+		total = temp_charge * term.days
+		total_charge = total
 
 		return render_template("payments.html",
 							title='payments',
 							session=session['email'],
 							detail_petsitter = detail_about_petsitter,
 							results = PETSITTERS[count],
-							user = USER_SEARCH
+							user = USER_SEARCH,
+							charge = temp_charge,
+							term = term.days,
+							total = total
 							)
 
 	else:
-		# if request.method == 'POST':
-		# 	tm = request.form.get("time")
-		# 	print("time:" , tm)
-		# 	return redirect('/')
 
 		return render_template("signup.html",
 							title='SignUp',
@@ -334,13 +368,6 @@ def enrollment_home_address():
         return redirect('/')
     User = session['email']
     citycode = function.Check_citycode(User)
-
-
-	# 등록 수정을 원하는 경우 고려해야함
-
-    # if citycode[0][0] != '0':
-        # return "already enroll home!"
-
 
     if request.method == 'POST':
         print(request.form)
@@ -546,12 +573,6 @@ def modify_pet_pet():
    if not 'email' in session:
       return redirect('/')
 
-   # User = session['email']
-    # citycode = function.Check_citycode(User)
-   # if citycode[0][0] != '0':
-    #     return "already enroll home!"
-
-
    if request.method == 'POST':
       print(request.form)
 
@@ -710,6 +731,42 @@ def modify_home_car_elevator():
                         title='progress',
                   		session='OK')
 
+
+@app.route('/modify_start', methods=['GET', 'POST'])
+def modify_start_petsitter():
+
+   if not 'email' in session:
+      return redirect('/')
+
+   if request.method == 'POST':
+
+      print("start_petsitter : " , request.form)
+      Nickname = request.form.get("Nickname")
+      Count_Total = request.form.get("Count_Total")
+      Count_Large = request.form.get("Count_Large")
+      Count_Medium = request.form.get("Count_Medium")
+      Count_Small = request.form.get("Count_Small")
+      Cost_Large = request.form.get("Cost_Large")
+      Cost_Medium = request.form.get("Cost_Medium")
+      Cost_Small = request.form.get("Cost_Small")
+      Start_Date = request.form.get("Start_Date")
+      End_Date = request.form.get("End_Date")
+      Except_Date = request.form.get("Except_Date")
+      Home_Name = request.form.get("Home_Name")
+      Home_Intro = request.form.get("Home_Intro")
+
+      User = session['email']
+
+      function.Modify_petsitter1(User, Nickname, Cost_Large, Cost_Medium, Cost_Small, Start_Date , End_Date , Except_Date)
+      function.Modify_petsitter2(User, Count_Total , Count_Large , Count_Medium , Count_Small, Home_Name ,Home_Intro)
+
+      return redirect('/petsitter')
+
+
+   return render_template("modify_start_petsitter.html",
+                        title='Search',
+                  		session='OK')
+
 @app.route('/rooms', methods=['GET', 'POST'])
 def rooms():
 
@@ -766,11 +823,11 @@ def pesitter():
 	petsitter = function.Read_petsitter(User)
 
 	return render_template("user_petsitter.html",
-                        title='MyProfile/pets',
+                        title='MyProfile/petsitter',
 						session='OK',
 						petsitter = petsitter)
 
-@app.route('/user/payments_list/', methods=['GET','POST'])
+@app.route('/user/payments/ing', methods=['GET','POST'])
 def payments_list():
 	if not 'email' in session:
 		return redirect('/')
@@ -808,14 +865,100 @@ def payments_list():
 							result_list = result)
 
 	User = session['email']
-	result = function.Search_tran(User)
+	get = function.Search_tran(User)
 
-	# print("result: ", result)
+	tm = time.localtime()
+	mon = format(tm.tm_mon,'02')
+	day = format(tm.tm_mday, '02')
+	today =  str(mon)+ "/" +str(tm.tm_mday) +"/" +str(tm.tm_year)
+
+	temp = []
+	check = 0
+	print("get: ", get)
+	for i in get:
+		# print("i:" ,i)
+		checkin = i[4]
+		checkout = i[5]
+		if today<=checkout:
+			temp.append(i)
+			check += 1
+			if check == 3:
+				break
+
+	# {{result_list[0][4]}} ~ {{result_list[0][5]}}
 
 	return render_template("user_payments_list.html",
                         title='MyPayments/list',
 						session='OK',
-						result_list = result)
+						result_list = temp)
+
+@app.route('/user/payments/complete', methods=['GET','POST'])
+def complete_list():
+	if not 'email' in session:
+		return redirect('/')
+
+	User = session['email']
+	get = function.Search_tran(User)
+
+	tm = time.localtime()
+	mon = format(tm.tm_mon,'02')
+	day = format(tm.tm_mday, '02')
+	today =  str(mon)+ "/" +str(tm.tm_mday) +"/" +str(tm.tm_year)
+
+	temp = []
+	check = 0
+	for i in get:
+		checkin = i[4]
+		checkout = i[5]
+		if today>=checkout:
+			temp.append(i)
+			check += 1
+			if check == 3:
+				break
+
+	return render_template("user_payments_complete.html",
+                        title='MyPayments/list',
+						session='OK',
+						result_list = temp)
+
+@app.route('/remove_petsitter', methods=['GET', 'POST'])
+def remove_petsitter():
+
+   if not 'email' in session:
+      return redirect('/')
+
+   User = session['email']
+   function.Delete_petsitter(User)
+
+   return render_template("remove_petsitter.html",
+                        title='Search',
+                  		session='OK')
+
+@app.route('/remove_house', methods=['GET', 'POST'])
+def remove_house():
+
+   if not 'email' in session:
+      return redirect('/')
+
+   User = session['email']
+   function.Delete_house(User)
+
+   return render_template("remove_house.html",
+                        title='Search',
+                  		session='OK')
+
+@app.route('/remove_pet', methods=['GET', 'POST'])
+def remove_pet():
+
+   if not 'email' in session:
+      return redirect('/')
+
+   User = session['email']
+   function.Delete_pet(User)
+
+   return render_template("remove_pet.html",
+                        title='Search',
+                  		session='OK')
 
 
 @app.route('/users/edit', methods=['GET', 'POST'])
