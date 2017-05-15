@@ -11,12 +11,6 @@
                 <li>
                     <a href="/pets" aria-selected="true" class="sidenav-item">펫 목록</a>
                 </li>
-                <!-- <li>
-                    <a href="#/my_reservations" aria-selected="false" class="sidenav-item">예약 관리</a>
-                </li>
-                <li>
-                    <a href="#/hosting/requirements" aria-selected="false" class="sidenav-item">예약 필수조건</a>
-                </li> -->
 
                 <div class="space-top-4 space-4">
                     <a href="#/pets/new" aria-selected="false" class="btn btn-host">새로운 펫 추가</a>
@@ -97,9 +91,15 @@
                                             </span>
 
                                             <div class="text-muted text-grey space-top-1 last-modified-date"><span>최종 업데이트: {{pets[0][9]}}</span></div>
+
+                                            <form action="/remove_pet" onSubmit="return confirm_delete()" method="post">
                                             <div class="space-top-4">
-                                                <a class="btn btn__first-btn btn-primary" href="/modify_pet/pet"><span>등록 수정하기</span></a>
-                                                <a class="btn btn__second-btn" href="#"><span>삭제하기</span></a></div><noscript></noscript></div>
+                                              <a class="btn btn__first-btn btn-primary" href="/modify_pet/pet"><span>등록 수정하기</span></a>
+                                              <input type="submit" class="btn btn__second-btn" value="삭제하기"/>
+                                            </form>
+
+                                                <noscript></noscript>
+                                              </div>
                                     </div>
                                 </li>
                             </ul>

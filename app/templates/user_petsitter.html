@@ -1,5 +1,10 @@
 {% extends "base.html" %} {% block body %} {% include 'header.html' %} {% include 'profilemenu.html' %}
-
+<script type="text/javascript">
+function confirm_delete() {
+  var con_test = confirm('정말 삭제하시겠습니까?');
+  return con_test;
+}
+</script>
 
 <div class="page-container-responsive space-top-4 space-4">
 
@@ -40,7 +45,7 @@
                                                     <div class="media-cover text-center">
                                                       <!-- <img src="{{url_for('static', filename='ayrton_senna_movie_wallpaper_by_bashgfx-d4cm6x6.jpg')}}" /> -->
                                                       <!-- <img class="img-responsive-height" src="../static/img/dog.png" alt="petsitter" /> -->
-                                                      <img class="img-responsive-height" src="https://a0.muscache.com/airbnb/static/page3/v3/room_default_no_photos-f209d3d70c1bed81fb0822b68e913045.png">
+                                                      <!-- <img class="img-responsive-height" src="https://a0.muscache.com/airbnb/static/page3/v3/room_default_no_photos-f209d3d70c1bed81fb0822b68e913045.png"> -->
                                                     </div>
                                                 </div>
                                             </a>
@@ -76,9 +81,13 @@
                                             </span>
 
                                             <div class="text-muted text-grey space-top-1 last-modified-date"><span>최종 업데이트: {{ petsitter[0][14] }}</span></div>
+                                            <form action="/remove_petsitter" onSubmit="return confirm_delete()" method="post">
                                             <div class="space-top-4">
-                                                <a class="btn btn__first-btn btn-primary" href="/modify_start"><span>등록 수정하기</span></a>
-                                                <a class="btn btn__second-btn" href="#"><span>삭제하기</span></a></div><noscript></noscript></div>
+                                              <a class="btn btn__first-btn btn-primary" href="/modify_start"><span>등록 수정하기</span></a>
+                                              <input type="submit" class="btn btn__second-btn" value="삭제하기"/>
+                                            </form>
+
+                                                <noscript></noscript></div>
                                     </div>
                                 </li>
                             </ul>
