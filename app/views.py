@@ -89,7 +89,7 @@ def results_none_region():
 		total = 0
 		for i in Info:
 			total = total + 1
-		page = total/8 + 1
+		page = int(total/8) + 1
 
 	if 'email' in session:
 
@@ -153,7 +153,7 @@ def results(region):
 		total = 0
 		for i in Info:
 			total = total + 1
-			page = total/8 + 1
+			page = int(total/8) + 1
 
 	if 'email' in session:
 
