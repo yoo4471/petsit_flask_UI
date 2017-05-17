@@ -68,7 +68,7 @@ def results_none_region():
 	print("number of large pet = ", children)
 	print("checkin  = ", checkin)
 	print("checkout = ", checkout)
-	print("====================================================="+request.query_string+"=====================================================")
+	print("=====================================================",request.query_string,"=====================================================")
 
 	Info = function.Search_bytotal(region, guests, adults, children, infants, checkin, checkout)
 
@@ -130,7 +130,7 @@ def results(region):
 	print("number of large pet = ", children)
 	print("checkin  = ", checkin)
 	print("checkout = ", checkout)
-	print("====================================================="+request.query_string+"=====================================================")
+	print("=====================================================",request.query_string,"=====================================================")
 
 	Info = function.Search_bytotal(region, guests, adults, children, infants, checkin, checkout)
 
