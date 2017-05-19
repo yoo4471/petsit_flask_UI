@@ -26,14 +26,28 @@ total_charge = 0
 def index():
 
 	if 'email' in session:
+		home_enroll = function.Check_citycode(session['email'])
+		pet_enroll = function.Check_npet(session['email'])
+		petsitter_enroll = function.Check_AP(session['email'])
+
+
+		print("======pet_enroll======", pet_enroll[0])
+		print("======petsitter_enroll======", petsitter_enroll[0])
+
 		if request.method == 'POST':
 			return render_template("search_results.html",
 							title='Welcome',
-							session=session['email']
+							session=session['email'],
+							home_enroll = home_enroll,
+							pet_enroll = pet_enroll[0],
+							petsitter_enroll = petsitter_enroll[0]
 							)
 		return render_template("search.html",
 						title='Welcome',
-						session=session['email']
+						session=session['email'],
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0]
 						)
 
 	if request.method == 'POST':
@@ -92,6 +106,9 @@ def results_none_region():
 		page = int(total/8) + 1
 
 	if 'email' in session:
+		home_enroll = function.Check_citycode(session['email'])
+		pet_enroll = function.Check_npet(session['email'])
+		petsitter_enroll = function.Check_AP(session['email'])
 
 		return render_template("search_results.html",
 		                        title='results',
@@ -99,7 +116,10 @@ def results_none_region():
 		                        info = Info,
 								total = total,
 								page = page,
-								print_search = pass_search)
+								print_search = pass_search,
+								home_enroll = home_enroll,
+								pet_enroll = pet_enroll[0],
+								petsitter_enroll = petsitter_enroll[0])
 
 	return render_template("search_results.html",
 	   						title='results',
@@ -156,6 +176,9 @@ def results(region):
 			page = int(total/8) + 1
 
 	if 'email' in session:
+		home_enroll = function.Check_citycode(session['email'])
+		pet_enroll = function.Check_npet(session['email'])
+		petsitter_enroll = function.Check_AP(session['email'])
 
 		return render_template("search_results.html",
 		                        title='results',
@@ -163,7 +186,10 @@ def results(region):
 		                        info = Info,
 								total = total,
 								page = page,
-								print_search = pass_search)
+								print_search = pass_search,
+								home_enroll = home_enroll,
+								pet_enroll = pet_enroll[0],
+								petsitter_enroll = petsitter_enroll[0])
 
 	return render_template("search_results.html",
 	   						title='results',
@@ -206,13 +232,19 @@ def detail(petsitter):
 	total_charge = add_all
 
 	if 'email' in session:
+		home_enroll = function.Check_citycode(session['email'])
+		pet_enroll = function.Check_npet(session['email'])
+		petsitter_enroll = function.Check_AP(session['email'])
 		return render_template("booking.html",
 							title='booking',
 							session=session['email'],
 							detail_petsitter = detail_about_petsitter,
 							results = PETSITTERS[petsitter],
 							user = USER_SEARCH,
-							total_cost = total
+							total_cost = total,
+							home_enroll = home_enroll,
+							pet_enroll = pet_enroll[0],
+							petsitter_enroll = petsitter_enroll[0]
 							)
 
 	return render_template("booking.html",
@@ -256,6 +288,10 @@ def payments():
 		total = temp_charge * term.days
 		total_charge = total
 
+		home_enroll = function.Check_citycode(session['email'])
+		pet_enroll = function.Check_npet(session['email'])
+		petsitter_enroll = function.Check_AP(session['email'])
+
 		return render_template("payments.html",
 							title='payments',
 							session=session['email'],
@@ -264,7 +300,10 @@ def payments():
 							user = USER_SEARCH,
 							charge = temp_charge,
 							term = term.days,
-							total = total
+							total = total,
+							home_enroll = home_enroll,
+							pet_enroll = pet_enroll[0],
+							petsitter_enroll = petsitter_enroll[0]
 							)
 
 	else:
@@ -329,7 +368,6 @@ def enrollment_home_address():
     if not 'email' in session:
         return redirect('/')
     User = session['email']
-    citycode = function.Check_citycode(User)
 
     if request.method == 'POST':
         print(request.form)
@@ -343,10 +381,16 @@ def enrollment_home_address():
         function.Update_Citycode(User, citycode)
         return redirect('/enrollment_home/room')
 
+    home_enroll = function.Check_citycode(session['email'])
+    pet_enroll = function.Check_npet(session['email'])
+    petsitter_enroll = function.Check_AP(session['email'])
+
     return render_template("address.html",
-                        title='progress',
+                        title='progress 1',
 						session='OK',
-						city='')
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 
 @app.route('/enrollment_home/room', methods=['GET', 'POST'])
@@ -369,9 +413,16 @@ def enrollment_home_room():
 		function.Save_home_room(User, house_type, room)
 		return redirect('/enrollment_home/car_elevator')
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+
 	return render_template("room.html",
-                        title='progress',
-						session='OK')
+                        title='progress2',
+						session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/enrollment_home/car_elevator', methods=['GET', 'POST'])
 def enrollment_home_car_elevator():
@@ -390,9 +441,15 @@ def enrollment_home_car_elevator():
 		return redirect('/rooms')
 
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("car_elevator.html",
-                        title='progress',
-						session='OK')
+                        title='progress3',
+						session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/start/', methods=['GET', 'POST'])
 def start_petsitter():
@@ -421,13 +478,20 @@ def start_petsitter():
 
 		function.Save_petsitter1(User, Nickname, Cost_Large, Cost_Medium, Cost_Small, Start_Date , End_Date , Except_Date)
 		function.Save_petsitter2(User, Count_Total , Count_Large , Count_Medium , Count_Small, Home_Name ,Home_Intro)
+		function.Update_AP(User)
 
 		return redirect('/petsitter')
 
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("start_petsitter.html",
                         title='Search',
-						session='OK')
+						session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/enrollment_pet/pet', methods=['GET', 'POST'])
 def enrollment_pet_pet():
@@ -451,9 +515,15 @@ def enrollment_pet_pet():
 
 		return redirect('/enrollment_pet/size')
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("pet.html",
-                        title='pet',
-						session='OK')
+                        title='pet progress 1',
+						session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/enrollment_pet/size', methods=['GET', 'POST'])
 def enrollment_pet_size():
@@ -474,9 +544,15 @@ def enrollment_pet_size():
 
 		return redirect('/enrollment_pet/vac')
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("pet_size.html",
-                        title='pet',
-						session='OK')
+                        title='pet progress 2',
+						session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/enrollment_pet/vac', methods=['GET', 'POST'])
 def enrollment_pet_vac():
@@ -495,184 +571,229 @@ def enrollment_pet_vac():
 
 		return redirect('/pets')
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+
 	return render_template("pet_vac.html",
                         title='pet',
-						session='OK')
+						session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 
 @app.route('/modify_pet/pet', methods=['GET', 'POST'])
 def modify_pet_pet():
     # Check session
-   if not 'email' in session:
-      return redirect('/')
+	if not 'email' in session:
+	   return redirect('/')
 
-   if request.method == 'POST':
-      print(request.form)
+	if request.method == 'POST':
+		print(request.form)
 
-      User = session['email']
+		User = session['email']
+		petname = request.form.get("petName")
+		petgender = request.form.get("petGender")
+		month = request.form.get("pet[birthday_month]")
+		day = request.form.get("pet[birthday_day]")
+		year = request.form.get("pet[birthday_year]")
+		petbirth = year+"-"+month+"-"+day
+		function.Modify_pet_pet(User, petname, petgender,petbirth)
 
-      petname = request.form.get("petName")
-      petgender = request.form.get("petGender")
-      month = request.form.get("pet[birthday_month]")
-      day = request.form.get("pet[birthday_day]")
-      year = request.form.get("pet[birthday_year]")
+		return redirect('/modify_pet/size')
 
-      petbirth = year+"-"+month+"-"+day
-      function.Modify_pet_pet(User, petname, petgender,petbirth)
-
-      return redirect('/modify_pet/size')
-
-   return render_template("modify_pet.html",
-                        title='pet',
-                  		session='OK')
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+	return render_template("modify_pet.html",
+                        title='pet modify 1',
+                  		session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/modify_pet/size', methods=['GET', 'POST'])
 def modify_pet_size():
 
-   if not 'email' in session:
-      return redirect('/')
+	if not 'email' in session:
+		return redirect('/')
 
-   if request.method == 'POST':
-      print(request.form)
+	if request.method == 'POST':
+		print(request.form)
 
-      User = session['email']
+		User = session['email']
 
-      breed = request.form.get("breed")
-      size = request.form.get("size")
-      function.Modify_pet_size(User, breed, size)
+		breed = request.form.get("breed")
+		size = request.form.get("size")
+		function.Modify_pet_size(User, breed, size)
 
-      return redirect('/modify_pet/vac')
+		return redirect('/modify_pet/vac')
 
-   return render_template("modify_pet_size.html",
-                        title='pet',
-                  		session='OK')
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+	return render_template("modify_pet_size.html",
+                        title='pet modify 2',
+                  		session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/modify_pet/vac', methods=['GET', 'POST'])
 def modify_pet_vac():
 
-   if not 'email' in session:
-      return redirect('/')
+	if not 'email' in session:
+		return redirect('/')
 
-   if request.method == 'POST':
-      print(request.form)
+	if request.method == 'POST':
+		print(request.form)
 
-      User = session['email']
-      ns = request.form.get("ns")
-      vac = request.form.get("vac")
-      function.Modify_pet_vac(User, ns, vac)
+		User = session['email']
+		ns = request.form.get("ns")
+		vac = request.form.get("vac")
+		function.Modify_pet_vac(User, ns, vac)
 
-      return redirect('/pets')
+		return redirect('/pets')
 
-   return render_template("modify_pet_vac.html",
-                        title='pet',
-                  		session='OK')
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+	return render_template("modify_pet_vac.html",
+                        title='pet modify 3',
+                  		session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/modify_home/address', methods=['GET', 'POST'])
 def modify_home_address():
    # Check session
-    if not 'email' in session:
-        return redirect('/')
-    User = session['email']
-    citycode = function.Check_citycode(User)
 
-    if request.method == 'POST':
-        print(request.form)
-        state = request.form.get("state")
-        city = request.form.get("city")
-        street = request.form.get("street")
-        apt = request.form.get("apt")
-        zipcode = request.form.get("zipcode")
-        function.Modify_home_address(User, state, city, street, apt, zipcode)
-        citycode = zipcode[0:3]
-        function.Update_Citycode(User, citycode)
-        return redirect('/modify_home/room')
+	if not 'email' in session:
+		return redirect('/')
 
-    return render_template("modify_address.html",
-                        title='progress',
-                  session='OK',
-                  city='')
+	User = session['email']
+	citycode = function.Check_citycode(User)
+
+	if request.method == 'POST':
+		print(request.form)
+		state = request.form.get("state")
+		city = request.form.get("city")
+		street = request.form.get("street")
+		apt = request.form.get("apt")
+		zipcode = request.form.get("zipcode")
+		function.Modify_home_address(User, state, city, street, apt, zipcode)
+		citycode = zipcode[0:3]
+		function.Update_Citycode(User, citycode)
+		return redirect('/modify_home/room')
+
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+	return render_template("modify_address.html",
+                        title='home modify 1',
+                  		session='OK',
+                  		home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 
 @app.route('/modify_home/room', methods=['GET', 'POST'])
 def modify_home_room():
    # Check session
-   if not 'email' in session:
-      return redirect('/')
 
+	if not 'email' in session:
+		return redirect('/')
 
-   if request.method == 'POST':
-      User = session['email']
-      print(request.form)
+	if request.method == 'POST':
+		User = session['email']
+		print(request.form)
 
-      house_type = request.form.get("house_type")
-      if house_type == '1':
-         house_type = 'A'
-      elif house_type == '2':
-         house_type = 'P'
-      room = request.form.get("number_of_room")
-      function.Modify_home_room(User, house_type, room)
-      return redirect('/modify_home/car_elevator')
+		house_type = request.form.get("house_type")
+		if house_type == '1':
+			house_type = 'A'
+		elif house_type == '2':
+			house_type = 'P'
 
-   return render_template("modify_room.html",
-                        title='progress',
-                  		session='OK')
+		room = request.form.get("number_of_room")
+		function.Modify_home_room(User, house_type, room)
+		return redirect('/modify_home/car_elevator')
+
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+	return render_template("modify_room.html",
+                        title='home modify 2',
+                  		session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/modify_home/car_elevator', methods=['GET', 'POST'])
 def modify_home_car_elevator():
    # Check session
-   if not 'email' in session:
-      return redirect('/')
 
+	if not 'email' in session:
+		return redirect('/')
 
-   if request.method == 'POST':
-      User = session['email']
-      print(request.form)
-      print(User)
-      elevator = house_type = request.form.get("elevatorType")
-      parking = house_type = request.form.get("parkingType")
-      function.Modify_home_car_elevator(User, elevator, parking)
-      return redirect('/rooms')
+	if request.method == 'POST':
+		User = session['email']
+		print(request.form)
+		print(User)
+		elevator = house_type = request.form.get("elevatorType")
+		parking = house_type = request.form.get("parkingType")
+		function.Modify_home_car_elevator(User, elevator, parking)
+		return redirect('/rooms')
 
-
-   return render_template("modify_car_elevator.html",
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+ 	return render_template("modify_car_elevator.html",
                         title='progress',
-                  		session='OK')
+                  		session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 
 @app.route('/modify_start', methods=['GET', 'POST'])
 def modify_start_petsitter():
 
-   if not 'email' in session:
-      return redirect('/')
+	if not 'email' in session:
+		return redirect('/')
 
-   if request.method == 'POST':
+	if request.method == 'POST':
 
-      print("start_petsitter : " , request.form)
-      Nickname = request.form.get("Nickname")
-      Count_Total = request.form.get("Count_Total")
-      Count_Large = request.form.get("Count_Large")
-      Count_Medium = request.form.get("Count_Medium")
-      Count_Small = request.form.get("Count_Small")
-      Cost_Large = request.form.get("Cost_Large")
-      Cost_Medium = request.form.get("Cost_Medium")
-      Cost_Small = request.form.get("Cost_Small")
-      Start_Date = request.form.get("Start_Date")
-      End_Date = request.form.get("End_Date")
-      Except_Date = request.form.get("Except_Date")
-      Home_Name = request.form.get("Home_Name")
-      Home_Intro = request.form.get("Home_Intro")
+		print("start_petsitter : " , request.form)
+		Nickname = request.form.get("Nickname")
+	    Count_Total = request.form.get("Count_Total")
+		Count_Large = request.form.get("Count_Large")
+    	Count_Medium = request.form.get("Count_Medium")
+    	Count_Small = request.form.get("Count_Small")
+    	Cost_Large = request.form.get("Cost_Large")
+    	Cost_Medium = request.form.get("Cost_Medium")
+    	Cost_Small = request.form.get("Cost_Small")
+    	Start_Date = request.form.get("Start_Date")
+    	End_Date = request.form.get("End_Date")
+    	Except_Date = request.form.get("Except_Date")
+    	Home_Name = request.form.get("Home_Name")
+    	Home_Intro = request.form.get("Home_Intro")
+		User = session['email']
+    	function.Modify_petsitter1(User, Nickname, Cost_Large, Cost_Medium, Cost_Small, Start_Date , End_Date , Except_Date)
+    	function.Modify_petsitter2(User, Count_Total , Count_Large , Count_Medium , Count_Small, Home_Name ,Home_Intro)
 
-      User = session['email']
+		return redirect('/petsitter')
 
-      function.Modify_petsitter1(User, Nickname, Cost_Large, Cost_Medium, Cost_Small, Start_Date , End_Date , Except_Date)
-      function.Modify_petsitter2(User, Count_Total , Count_Large , Count_Medium , Count_Small, Home_Name ,Home_Intro)
-
-      return redirect('/petsitter')
-
-
-   return render_template("modify_start_petsitter.html",
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
+  	return render_template("modify_start_petsitter.html",
                         title='Search',
-                  		session='OK')
+                  		session='OK',
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/rooms', methods=['GET', 'POST'])
 def rooms():
@@ -690,9 +811,15 @@ def rooms():
 	else:
 		room = ''
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("user_rooms.html",
                         title='MyProfile/rooms',
-						session='OK', rooms = room)
+						session='OK', rooms = room,
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/pets', methods=['GET', 'POST'])
 def pets():
@@ -710,9 +837,15 @@ def pets():
 	else:
 		pet = ''
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("user_pets.html",
                         title='MyProfile/pets',
-						session='OK', pets=pet)
+						session='OK', pets=pet,
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/petsitter', methods=['GET', 'POST'])
 def pesitter():
@@ -723,10 +856,16 @@ def pesitter():
 	User = session['email']
 	petsitter = function.Read_petsitter(User)
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("user_petsitter.html",
                         title='MyProfile/petsitter',
 						session='OK',
-						petsitter = petsitter)
+						petsitter = petsitter,
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/user/payments/ing', methods=['GET','POST'])
 def payments_list():
@@ -780,10 +919,16 @@ def payments_list():
 			if check == 3:
 				break
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("user_payments_list.html",
                         title='MyPayments/list',
 						session='OK',
-						result_list = temp)
+						result_list = temp,
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 @app.route('/user/payments/complete', methods=['GET','POST'])
 def complete_list():
@@ -809,10 +954,16 @@ def complete_list():
 			if check == 3:
 				break
 
+	home_enroll = function.Check_citycode(session['email'])
+	pet_enroll = function.Check_npet(session['email'])
+	petsitter_enroll = function.Check_AP(session['email'])
 	return render_template("user_payments_complete.html",
                         title='MyPayments/list',
 						session='OK',
-						result_list = temp)
+						result_list = temp,
+						home_enroll = home_enroll,
+						pet_enroll = pet_enroll[0],
+						petsitter_enroll = petsitter_enroll[0])
 
 
 @app.route('/remove_petsitter', methods=['GET', 'POST'])
@@ -827,7 +978,7 @@ def remove_petsitter():
 
    return render_template("remove.html",
                         title='Search',
-                  session='OK')
+                  		session='OK')
 
 @app.route('/remove_house', methods=['GET', 'POST'])
 def remove_house():
@@ -841,7 +992,7 @@ def remove_house():
 
    return render_template("remove.html",
                         title='Search',
-                  session='OK')
+                  		session='OK')
 
 @app.route('/remove_pet', methods=['GET', 'POST'])
 def remove_pet():
@@ -855,7 +1006,7 @@ def remove_pet():
 
    return render_template("remove.html",
                         title='Search',
-                  session='OK')
+                  		session='OK')
 
 
 @app.route('/users/edit', methods=['GET', 'POST'])
